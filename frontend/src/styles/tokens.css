@@ -1,0 +1,87 @@
+:root {
+  color-scheme: light;
+
+  --bg: #f4f3ee;
+  --bg-outer: #e7e5de;
+  --surface: #ffffff;
+  --surface-2: #f8f7f3;
+  --surface-sunken: #eeece5;
+  --line: #e6e3db;
+  --line-strong: #d3cfc4;
+
+  --ink: #171a18;
+  --ink-2: #545a56;
+  --ink-3: #868b87;
+
+  /* Banana-leaf green: fills use --brand, text and icons on surfaces use --brand-text. */
+  --brand: #1e6b47;
+  --brand-pressed: #165438;
+  --brand-tint: #e1ede6;
+  --brand-text: #1e6b47;
+  --on-brand: #ffffff;
+
+  /* Macro colours, validated as a set for colour-vision deficiency (always shown with labels). */
+  --carbs: #1baf7a;
+  --protein: #eb6834;
+  --fat: #6250d6;
+
+  --danger: #d03b3b;
+  --danger-text: #b3312f;
+  --danger-tint: #fbeae8;
+  --warning: #e9a30f;
+  --warning-text: #7d5200;
+  --warning-tint: #fcf2da;
+
+  --viewfinder: #1b1d1c;
+  --scrim: rgba(18, 20, 19, 0.45);
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  --font: system-ui, -apple-system, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --app-max: 480px;
+  --gutter: 16px;
+  --tabbar-h: 62px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --bg: #0f1110;
+    --bg-outer: #080909;
+    --surface: #1b1d1c;
+    --surface-2: #222524;
+    --surface-sunken: #151716;
+    --line: #2b2f2d;
+    --line-strong: #3b403d;
+
+    --ink: #f0efec;
+    --ink-2: #c3c2b7;
+    --ink-3: #8d918d;
+
+    --brand: #2a7f56;
+    --brand-pressed: #236b48;
+    --brand-tint: #1d3328;
+    --brand-text: #6cc595;
+    --on-brand: #ffffff;
+
+    --carbs: #199e70;
+    --protein: #d95926;
+    --fat: #9085e9;
+
+    --danger: #e05656;
+    --danger-text: #f08c86;
+    --danger-tint: #3a1e1c;
+    --warning: #f0b63a;
+    --warning-text: #f3c870;
+    --warning-tint: #33290f;
+
+    --viewfinder: #0b0c0c;
+    --scrim: rgba(0, 0, 0, 0.6);
+  }
+}

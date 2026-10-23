@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/.venv/
+
+# Model weights are large; keep them out of git (see backend/models/README.md)
+backend/models/*.onnx
+backend/models/model_config.json
+
+# Node
+node_modules/
+frontend/dist/
+
+.DS_Store

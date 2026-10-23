@@ -1,0 +1,62 @@
+.dish-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dish-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 66px;
+  padding: 10px 12px 10px 14px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.dish-list li + li .dish-row {
+  border-top: 1px solid var(--line);
+}
+
+.dish-row:active {
+  background: var(--surface-2);
+}
+
+.dish-row__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.dish-row__name {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dish-row__meta {
+  display: block;
+  margin-top: 1px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.dish-row__kcal {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dish-row__kcal span {
+  color: var(--ink-3);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.dish-row__chevron {
+  flex: none;
+  color: var(--ink-3);
+}

@@ -1,0 +1,70 @@
+.macro {
+  --macro: var(--carbs);
+  min-width: 0;
+}
+
+.macro--protein {
+  --macro: var(--protein);
+}
+
+.macro--fat {
+  --macro: var(--fat);
+}
+
+.macro__label {
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.macro__track {
+  height: 6px;
+  margin: 6px 0 5px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--macro) 18%, var(--surface));
+}
+
+.macro__fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--macro);
+  transition: width 400ms ease;
+}
+
+.macro__value {
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.macro__value strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.macro--over .macro__value strong,
+.macro__over-icon {
+  color: var(--danger-text);
+}
+
+.macro__over-icon {
+  margin-right: 3px;
+  vertical-align: -1px;
+}
+
+.macro-dot {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--carbs);
+}
+
+.macro-dot--protein {
+  background: var(--protein);
+}
+
+.macro-dot--fat {
+  background: var(--fat);
+}

@@ -1,0 +1,127 @@
+{
+  "version": "2026.10",
+  "basis": "Energy and macronutrients per standard serving. Reference values compiled for the prototype from published Malaysian and regional food-composition figures; each entry should be checked against the Malaysian Food Composition Database (MyFCD) before final evaluation.",
+  "source_url": "https://myfcd.moh.gov.my/",
+  "foods": [
+    {
+      "id": "nasi_lemak",
+      "name": "Nasi lemak",
+      "local_name": "Nasi lemak bungkus",
+      "description": "Coconut rice with sambal, fried anchovies, peanuts, boiled egg and cucumber",
+      "category": "rice",
+      "serving": { "label": "1 packet", "grams": 200 },
+      "energy_kcal": 389,
+      "carbohydrate_g": 46,
+      "protein_g": 11,
+      "fat_g": 18
+    },
+    {
+      "id": "roti_canai",
+      "name": "Roti canai",
+      "local_name": "Roti canai kosong",
+      "description": "Plain flaky flatbread, served without dhal or curry",
+      "category": "bread",
+      "serving": { "label": "1 piece", "grams": 95 },
+      "energy_kcal": 301,
+      "carbohydrate_g": 38,
+      "protein_g": 6,
+      "fat_g": 14
+    },
+    {
+      "id": "chicken_rice",
+      "name": "Chicken rice",
+      "local_name": "Nasi ayam",
+      "description": "Roasted or steamed chicken with seasoned rice, chilli sauce and cucumber",
+      "category": "rice",
+      "serving": { "label": "1 plate", "grams": 380 },
+      "energy_kcal": 607,
+      "carbohydrate_g": 75,
+      "protein_g": 25,
+      "fat_g": 23
+    },
+    {
+      "id": "char_kuey_teow",
+      "name": "Char kuey teow",
+      "local_name": "Kuey teow goreng",
+      "description": "Wok-fried flat rice noodles with prawns, cockles, egg, bean sprouts and chives",
+      "category": "noodles",
+      "serving": { "label": "1 plate", "grams": 380 },
+      "energy_kcal": 742,
+      "carbohydrate_g": 76,
+      "protein_g": 23,
+      "fat_g": 38
+    },
+    {
+      "id": "mee_goreng_mamak",
+      "name": "Mee goreng mamak",
+      "local_name": "Mee goreng mamak",
+      "description": "Spicy fried yellow noodles with egg, tofu, potato and vegetables",
+      "category": "noodles",
+      "serving": { "label": "1 plate", "grams": 350 },
+      "energy_kcal": 660,
+      "carbohydrate_g": 80,
+      "protein_g": 18,
+      "fat_g": 30
+    },
+    {
+      "id": "nasi_goreng",
+      "name": "Nasi goreng",
+      "local_name": "Nasi goreng kampung",
+      "description": "Fried rice with egg, chilli paste, vegetables and anchovies",
+      "category": "rice",
+      "serving": { "label": "1 plate", "grams": 350 },
+      "energy_kcal": 637,
+      "carbohydrate_g": 85,
+      "protein_g": 18,
+      "fat_g": 25
+    },
+    {
+      "id": "laksa",
+      "name": "Laksa",
+      "local_name": "Laksa kari",
+      "description": "Curry laksa: rice noodles in spiced coconut broth with tofu puffs and bean sprouts",
+      "category": "noodles",
+      "serving": { "label": "1 bowl", "grams": 500 },
+      "energy_kcal": 589,
+      "carbohydrate_g": 55,
+      "protein_g": 20,
+      "fat_g": 32
+    },
+    {
+      "id": "satay",
+      "name": "Satay",
+      "local_name": "Sate ayam",
+      "description": "Grilled chicken skewers with peanut sauce",
+      "category": "skewer",
+      "serving": { "label": "10 sticks with sauce", "grams": 200 },
+      "energy_kcal": 458,
+      "carbohydrate_g": 18,
+      "protein_g": 38,
+      "fat_g": 26
+    },
+    {
+      "id": "rendang",
+      "name": "Rendang",
+      "local_name": "Rendang daging",
+      "description": "Beef slow-cooked in coconut milk and spices until dry",
+      "category": "curry",
+      "serving": { "label": "1 serving", "grams": 100 },
+      "energy_kcal": 282,
+      "carbohydrate_g": 8,
+      "protein_g": 22,
+      "fat_g": 18
+    },
+    {
+      "id": "thosai",
+      "name": "Thosai",
+      "local_name": "Thosai kosong",
+      "description": "Plain fermented rice and lentil crepe, served without chutney or sambar",
+      "category": "bread",
+      "serving": { "label": "1 piece", "grams": 100 },
+      "energy_kcal": 168,
+      "carbohydrate_g": 30,
+      "protein_g": 4,
+      "fat_g": 3.5
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+.diary__header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  margin: 0 -8px;
+  padding: calc(var(--safe-top) + 10px) 0 12px;
+}
+
+.diary__header .icon-button:disabled {
+  color: var(--line-strong);
+  cursor: default;
+}
+
+.diary__date {
+  text-align: center;
+}
+
+.diary__date h1 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.diary__date p {
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.summary {
+  padding: 18px 16px 16px;
+}
+
+.summary__top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.summary__figures {
+  display: grid;
+  flex: 1;
+  gap: 12px;
+  margin: 0;
+}
+
+.summary__figures dt {
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.summary__figures dd {
+  margin: 1px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.summary__macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.meal {
+  margin-top: 12px;
+}
+
+.meal__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 14px 16px 4px;
+}
+
+.meal__header h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.meal__kcal {
+  color: var(--ink-2);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.meal__entries {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 16px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  text-align: left;
+}
+
+.entry:active {
+  background: var(--surface-2);
+}
+
+.entry__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.entry__name {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.entry__scanned {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--brand-text);
+  font-weight: 500;
+}
+
+.entry__kcal {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.meal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 16px;
+  border-top: 1px solid var(--line);
+}
+
+.meal__header + .meal__footer {
+  margin-top: 6px;
+}
+
+.meal__scan {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--ink-3);
+}
+
+.diary__footnote {
+  margin: 20px 8px 0;
+  color: var(--ink-3);
+  font-size: 12px;
+  text-align: center;
+}
+
+.entry-sheet__serving {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.entry-sheet__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.entry-sheet__totals {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.entry-sheet__totals strong {
+  color: var(--ink);
+  font-size: 22px;
+}
+
+.entry-sheet__totals ul {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  list-style: none;
+}
+
+.entry-sheet__totals li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.entry-sheet__source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  color: var(--ink-3);
+  font-size: 13px;
+}

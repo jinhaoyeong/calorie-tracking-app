@@ -1,0 +1,313 @@
+.week-switch {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  margin: 8px -8px 4px;
+}
+
+.week-switch .icon-button:disabled {
+  color: var(--line-strong);
+  cursor: default;
+}
+
+.week-switch__label {
+  text-align: center;
+}
+
+.week-switch__label strong {
+  display: block;
+  font-size: 16px;
+}
+
+.week-switch__label span {
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.stat__label {
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stat__value {
+  margin-top: 4px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.stat__unit {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.progress__card-title {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.progress__empty {
+  padding: 28px 0 12px;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 8px 0 0;
+  padding: 0;
+  color: var(--ink-2);
+  font-size: 12px;
+  list-style: none;
+}
+
+.chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--brand);
+}
+
+.chart-legend__swatch--over {
+  background: var(--danger);
+}
+
+.chart-legend__line {
+  width: 14px;
+  height: 2px;
+  background: var(--ink-2);
+}
+
+.chart {
+  position: relative;
+  margin-top: 8px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.chart__grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.chart__baseline {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.chart__target {
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+}
+
+.chart__tick,
+.chart__day {
+  fill: var(--ink-3);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart__day--today {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+.chart__bar {
+  fill: var(--brand);
+  transition: opacity 120ms ease;
+}
+
+.chart__bar--over {
+  fill: var(--danger);
+}
+
+.chart__bar--muted {
+  opacity: 0.35;
+}
+
+.chart__hit {
+  fill: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.chart__hit:focus-visible {
+  stroke: var(--brand-text);
+  stroke-width: 2;
+}
+
+.chart__tooltip {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.chart__tooltip strong {
+  font-size: 13px;
+}
+
+.chart__tooltip span {
+  color: var(--ink-2);
+}
+
+.chart-table {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.chart-table summary {
+  min-height: 36px;
+  padding: 8px 0;
+  color: var(--brand-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chart-table th,
+.chart-table td {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  text-align: right;
+}
+
+.chart-table th:first-child {
+  font-weight: 500;
+  text-align: left;
+}
+
+.chart-table thead th {
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chart-table__over {
+  color: var(--danger-text);
+}
+
+.progress__macros {
+  margin-top: 12px;
+}
+
+.split {
+  display: flex;
+  gap: 2px;
+  height: 12px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.split__part {
+  flex-basis: 0;
+  min-width: 2px;
+}
+
+.split__part:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.split__part:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.split__part--carbs {
+  background: var(--carbs);
+}
+
+.split__part--protein {
+  background: var(--protein);
+}
+
+.split__part--fat {
+  background: var(--fat);
+}
+
+.split__legend {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.split__legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.split__name {
+  flex: 1;
+}
+
+.split__grams {
+  min-width: 92px;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.progress__dishes {
+  margin-top: 12px;
+}
+
+.progress__dishes .progress__card-title {
+  padding: 16px 16px 6px;
+}
+
+.progress__dish-name {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.progress__dish-count {
+  color: var(--ink-3);
+  font-size: 13px;
+}

@@ -1,0 +1,84 @@
+.breakdown__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breakdown__steps li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.breakdown__steps li + li {
+  border-top: 1px solid var(--line);
+}
+
+.breakdown__label {
+  display: block;
+  font-size: 15px;
+}
+
+.breakdown__detail {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.breakdown__value {
+  flex: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.breakdown__total {
+  background: var(--brand-tint);
+}
+
+.breakdown__total .breakdown__label {
+  font-weight: 700;
+}
+
+.breakdown__total .breakdown__value {
+  color: var(--brand-text);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.breakdown__macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 14px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.breakdown__macros div + div {
+  padding-left: 14px;
+  border-left: 1px solid var(--line);
+}
+
+.breakdown__macros dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+.breakdown__macros dd {
+  margin: 3px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.breakdown__footnote {
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.45;
+}

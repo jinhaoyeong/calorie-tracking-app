@@ -1,0 +1,45 @@
+.food-glyph {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--surface-sunken);
+  color: var(--ink-2);
+}
+
+/* Warm, low-key tints that hint at the dish type without competing with data colours. */
+.food-glyph--rice {
+  background: #f1ece0;
+  color: #6d5a33;
+}
+
+.food-glyph--noodles {
+  background: #f5e9dc;
+  color: #7c4f27;
+}
+
+.food-glyph--bread {
+  background: #f3eedf;
+  color: #75612c;
+}
+
+.food-glyph--skewer {
+  background: #f4e6e0;
+  color: #7f3f2b;
+}
+
+.food-glyph--curry {
+  background: #f2e4dc;
+  color: #7a3a22;
+}
+
+@media (prefers-color-scheme: dark) {
+  .food-glyph--rice,
+  .food-glyph--noodles,
+  .food-glyph--bread,
+  .food-glyph--skewer,
+  .food-glyph--curry {
+    background: #2a2723;
+    color: #d8c7a6;
+  }
+}

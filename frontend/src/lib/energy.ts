@@ -1,0 +1,114 @@
+import type { ActivityLevel, Goal, Profile, Sex } from './types';
+
+export const ACTIVITY_LEVELS: Record<ActivityLevel, { label: string; detail: string; multiplier: number }> = {
+  sedentary: { label: 'Sedentary', detail: 'Desk-based day, little or no exercise', multiplier: 1.2 },
+  light: { label: 'Lightly active', detail: 'Exercise 1–3 days a week', multiplier: 1.375 },
+  moderate: { label: 'Moderately active', detail: 'Exercise 3–5 days a week', multiplier: 1.55 },
+  very: { label: 'Very active', detail: 'Hard training 6–7 days a week', multiplier: 1.725 },
+  extra: { label: 'Extra active', detail: 'Physical job plus daily training', multiplier: 1.9 },
+};
+
+export const ACTIVITY_ORDER: ActivityLevel[] = ['sedentary', 'light', 'moderate', 'very', 'extra'];
+
+export const GOALS: Record<Goal, { label: string; detail: string; adjustmentKcal: number }> = {
+  lose: { label: 'Lose fat', detail: 'About 0.5 kg a week, 500 kcal below maintenance', adjustmentKcal: -500 },
+  maintain: { label: 'Maintain weight', detail: 'Eat around your maintenance level', adjustmentKcal: 0 },
+  gain: { label: 'Build muscle', detail: 'A small 300 kcal surplus to support training', adjustmentKcal: 300 },
+};
+
+export const GOAL_ORDER: Goal[] = ['lose', 'maintain', 'gain'];
+
+/** Daily targets are never set below these floors, a common safety margin for adults. */
+export const MINIMUM_TARGET_KCAL: Record<Sex, number> = { male: 1500, female: 1200 };
+
+export const PROFILE_LIMITS = {
+  age: { min: 18, max: 65 },
+  heightCm: { min: 120, max: 230 },
+  weightKg: { min: 30, max: 250 },
+} as const;
+
+/** Protein per kg of body weight, within the range commonly advised for people who train. */
+export const PROTEIN_G_PER_KG = 1.6;
+export const FAT_SHARE_OF_ENERGY = 0.25;
+
+type BodyMetrics = Pick<Profile, 'sex' | 'age' | 'heightCm' | 'weightKg'>;
+
+/** Resting energy expenditure, Mifflin–St Jeor (1990). */
+export function restingEnergy({ sex, age, heightCm, weightKg }: BodyMetrics): number {
+  const base = 10 * weightKg + 6.25 * heightCm - 5 * age;
+  return base + (sex === 'male' ? 5 : -161);
+}
+
+export interface TargetBreakdown {
+  restingKcal: number;
+  activityMultiplier: number;
+  maintenanceKcal: number;
+  goalAdjustmentKcal: number;
+  minimumKcal: number;
+  /** True when the goal adjustment would have gone below the minimum target. */
+  minimumApplied: boolean;
+  targetKcal: number;
+}
+
+export function calculateTarget(profile: Profile): TargetBreakdown {
+  const restingKcal = Math.round(restingEnergy(profile));
+  const activityMultiplier = ACTIVITY_LEVELS[profile.activity].multiplier;
+  const maintenanceKcal = Math.round(restingKcal * activityMultiplier);
+  const goalAdjustmentKcal = GOALS[profile.goal].adjustmentKcal;
+  const minimumKcal = MINIMUM_TARGET_KCAL[profile.sex];
+  const adjusted = maintenanceKcal + goalAdjustmentKcal;
+  const minimumApplied = adjusted < minimumKcal;
+  // Rounded to the nearest 10 kcal; finer precision would overstate the estimate.
+  const targetKcal = Math.round(Math.max(adjusted, minimumKcal) / 10) * 10;
+  return {
+    restingKcal,
+    activityMultiplier,
+    maintenanceKcal,
+    goalAdjustmentKcal,
+    minimumKcal,
+    minimumApplied,
+    targetKcal,
+  };
+}
+
+export interface MacroTargets {
+  carbohydrateG: number;
+  proteinG: number;
+  fatG: number;
+}
+
+export function macroTargets(weightKg: number, targetKcal: number): MacroTargets {
+  const proteinG = Math.round(PROTEIN_G_PER_KG * weightKg);
+  const fatG = Math.round((targetKcal * FAT_SHARE_OF_ENERGY) / 9);
+  const carbohydrateG = Math.max(0, Math.round((targetKcal - proteinG * 4 - fatG * 9) / 4));
+  return { carbohydrateG, proteinG, fatG };
+}
+
+export type ProfileDraft = Partial<Omit<Profile, 'updatedAt'>>;
+export type ProfileErrors = Partial<Record<keyof ProfileDraft, string>>;
+
+export function validateProfile(draft: ProfileDraft): ProfileErrors {
+  const errors: ProfileErrors = {};
+  if (!draft.sex) errors.sex = 'Choose one to continue.';
+  const ranges: [keyof typeof PROFILE_LIMITS, string, string][] = [
+    ['age', 'Age', 'years'],
+    ['heightCm', 'Height', 'cm'],
+    ['weightKg', 'Weight', 'kg'],
+  ];
+  for (const [key, label, unit] of ranges) {
+    const value = draft[key];
+    const { min, max } = PROFILE_LIMITS[key];
+    if (value === undefined || !Number.isFinite(value)) {
+      errors[key] = `Enter your ${label.toLowerCase()}.`;
+    } else if (value < min || value > max) {
+      errors[key] = `${label} must be between ${min} and ${max} ${unit}.`;
+    }
+  }
+  if (!draft.activity) errors.activity = 'Choose an activity level.';
+  if (!draft.goal) errors.goal = 'Choose a goal.';
+  return errors;
+}
+
+export function isCompleteProfile(draft: ProfileDraft): draft is Omit<Profile, 'updatedAt'> {
+  return Object.keys(validateProfile(draft)).length === 0;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Pinggan – Malaysian food calorie tracker",
+  "short_name": "Pinggan",
+  "description": "Snap a Malaysian dish, see standard-serving calories and track them against your daily target.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f3ee",
+  "theme_color": "#1e6b47",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
