@@ -2,6 +2,7 @@ import { CaretRight, Cpu, Images, NotePencil, PencilSimple, SealCheck, ShieldChe
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BottomSheet } from '../components/BottomSheet';
+import { InstallRow } from '../components/InstallApp';
 import { Switch } from '../components/Controls';
 import { TargetBreakdown } from '../components/TargetBreakdown';
 import { bmi, bmiBand, GOALS } from '../lib/energy';
@@ -119,6 +120,7 @@ export function Me() {
             <CaretRight size={16} weight="bold" className="list-row__chevron" />
           </Link>
         </li>
+        <InstallRow />
       </ul>
 
       <div className="section-head">

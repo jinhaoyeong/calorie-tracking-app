@@ -1,0 +1,65 @@
+.install__notice {
+  margin-bottom: 16px;
+}
+
+.install__notice p {
+  margin: 0;
+}
+
+.install__open {
+  min-height: 44px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.install__lede {
+  margin-bottom: 18px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.install__browser {
+  margin: 0 0 10px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.install__steps {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.install__steps li {
+  position: relative;
+  min-height: 24px;
+  padding: 2px 0 0 36px;
+  font-size: 15px;
+  counter-increment: step;
+}
+
+.install__steps li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 700;
+  content: counter(step);
+}
+
+.install__welcome {
+  margin-top: 10px;
+}

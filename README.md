@@ -86,6 +86,7 @@ backend/                    FastAPI service: upload validation, classification, 
   models/                   Drop model.onnx + model_config.json here
   tests/                    pytest suite
 frontend/                   React + TypeScript + Vite mobile web app
+  service-worker.js         Offline cache for the installed app (built into dist/sw.js)
   src/lib/                  energy maths, diary arithmetic, foods, dates, API client, image checks (+ tests)
   src/state/                on-device app state, toasts, model status
   src/components/           UI building blocks (ring, macro charts, week strip, log panel, sheets…)
@@ -145,6 +146,24 @@ Import the GitHub repository in Vercel (leave the root directory as the reposito
 push to `main` then deploys to production. The deployed API runs the demo classifier. To serve a
 trained model there, add `onnxruntime` to the root `requirements.txt` and make the model files
 available to the function (they are git-ignored by default).
+
+### Installing on a phone
+
+Pinggan is an installable web app: it gets its own home-screen icon, opens full screen, and keeps
+working offline for logging (scanning needs a connection). Share the project's production address
+(the short `*.vercel.app` domain under **Settings → Domains**). Vercel protects the long
+per-deployment URLs with Vercel Authentication by default, so anyone else opening one gets a
+Vercel login page and can't install the app from it.
+
+- **Android:** open the link in Chrome, tap **⋮ → Install app** (or **Add to home screen**). In
+  Samsung Internet, tap **≡ → Add page to → Home screen**. Links opened from WhatsApp,
+  Instagram, Facebook or TikTok open in that app's built-in browser, which can't install apps. The
+  app detects this and offers an **Open in Chrome** button.
+- **iPhone:** open the link in Safari, tap **Share → Add to Home Screen**.
+
+**Me → Install app** shows the browser's install dialog where it is available, and these steps
+where it isn't. The service worker (`frontend/service-worker.js`, built into `dist/sw.js`) caches
+the app itself, never photos or API responses.
 
 ## Connecting the trained model
 

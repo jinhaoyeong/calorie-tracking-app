@@ -1,6 +1,7 @@
 import { CaretLeft, ShieldCheck } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { WelcomeInstall } from '../components/InstallApp';
 import { ActivityChoice, Field, GoalChoice, SexChoice, toDraft, type ProfileForm } from '../components/ProfileFields';
 import { TargetBreakdown } from '../components/TargetBreakdown';
 import {
@@ -127,6 +128,7 @@ export function Onboarding() {
           <button type="button" className="btn btn--primary btn--block" onClick={() => setStepIndex(0)}>
             Get started
           </button>
+          <WelcomeInstall />
           <p className="welcome__privacy">
             <ShieldCheck size={14} weight="fill" /> Your data stays on this device
           </p>
