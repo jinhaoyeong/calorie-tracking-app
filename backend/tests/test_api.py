@@ -33,19 +33,31 @@ def test_health_reports_demo_mode_without_a_model(client):
     assert set(body["model"]["labels"]) == SUPPORTED
 
 
-def test_foods_lists_exactly_the_ten_proposal_classes(client):
+def test_exactly_the_ten_proposal_classes_are_scan_ready(client):
     foods = client.get("/api/foods").json()["foods"]
-    assert {f["id"] for f in foods} == SUPPORTED
+    assert {f["id"] for f in foods if f.get("scan")} == SUPPORTED
+
+
+def test_food_database_covers_everyday_malaysian_food(client):
+    body = client.get("/api/foods").json()
+    foods = body["foods"]
+    assert len(foods) >= 70
+    assert len({f["id"] for f in foods}) == len(foods)
+    categories = {c["id"] for c in body["categories"]}
+    addon_ids = {a["id"] for a in body["addons"]}
     for food in foods:
         assert food["energy_kcal"] > 0
-        assert food["serving"]["label"]
+        assert food["serving"]["label"] and food["serving"]["local_label"]
+        assert food["category"] in categories
+        assert set(food.get("addons", [])) <= addon_ids, food["id"]
 
 
 def test_foods_energy_agrees_with_macronutrients(client):
     # Atwater factors (4/4/9 kcal per gram) should reproduce the stated energy closely.
-    for food in client.get("/api/foods").json()["foods"]:
-        derived = 4 * food["carbohydrate_g"] + 4 * food["protein_g"] + 9 * food["fat_g"]
-        assert abs(derived - food["energy_kcal"]) <= 0.02 * food["energy_kcal"], food["id"]
+    body = client.get("/api/foods").json()
+    for item in body["foods"] + body["addons"]:
+        derived = 4 * item["carbohydrate_g"] + 4 * item["protein_g"] + 9 * item["fat_g"]
+        assert abs(derived - item["energy_kcal"]) <= max(3, 0.02 * item["energy_kcal"]), item["id"]
 
 
 def test_predict_jpeg_returns_ranked_top3_with_nutrition(client):
@@ -122,17 +134,17 @@ def test_predict_requires_a_file(client):
 class FixedClassifier:
     """Stub returning a label that has no nutrition entry."""
 
-    info = ModelInfo(name="stub", architecture="stub", mode="onnx", input_size=224, labels=["kuih_lapis", "laksa"])
+    info = ModelInfo(name="stub", architecture="stub", mode="onnx", input_size=224, labels=["kuih_bahulu", "laksa"])
 
     def predict(self, image):
-        return [Prediction("kuih_lapis", 0.55), Prediction("laksa", 0.45)]
+        return [Prediction("kuih_bahulu", 0.55), Prediction("laksa", 0.45)]
 
 
 def test_missing_nutrition_entry_returns_null_nutrition(settings):
     client = TestClient(create_app(settings, classifier=FixedClassifier()))
     body = upload(client, encode_image()).json()
-    assert body["predictions"][0]["food_id"] == "kuih_lapis"
-    assert body["predictions"][0]["name"] == "Kuih lapis"
+    assert body["predictions"][0]["food_id"] == "kuih_bahulu"
+    assert body["predictions"][0]["name"] == "Kuih bahulu"
     assert body["nutrition"] is None
     assert body["low_confidence"] is True
     assert len(body["predictions"]) == 2

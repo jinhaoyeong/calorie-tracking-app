@@ -1,59 +1,91 @@
 .breakdown__steps {
   margin: 0;
-  padding: 0;
+  padding: 6px 0;
   list-style: none;
 }
 
 .breakdown__steps li {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 10px 18px;
 }
 
-.breakdown__steps li + li {
-  border-top: 1px solid var(--line);
+.breakdown__step {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.breakdown__text {
+  flex: 1;
+  min-width: 0;
 }
 
 .breakdown__label {
   display: block;
   font-size: 15px;
+  font-weight: 700;
 }
 
 .breakdown__detail {
   display: block;
-  margin-top: 2px;
+  margin-top: 1px;
   color: var(--ink-3);
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
 .breakdown__value {
   flex: none;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .breakdown__total {
-  background: var(--brand-tint);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 10px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--ink);
+  color: var(--canvas);
 }
 
-.breakdown__total .breakdown__label {
-  font-weight: 700;
+.breakdown__total .breakdown__detail {
+  color: inherit;
+  opacity: 0.7;
 }
 
-.breakdown__total .breakdown__value {
-  color: var(--brand-text);
-  font-size: 17px;
-  font-weight: 700;
+.breakdown__total-label {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.breakdown__total-value {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.breakdown__total-value small {
+  font-size: 14px;
+  opacity: 0.7;
 }
 
 .breakdown__macros {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   margin: 0;
-  padding: 14px 16px;
-  border-top: 1px solid var(--line);
+  padding: 16px 18px 6px;
 }
 
 .breakdown__macros div + div {
@@ -67,17 +99,17 @@
   gap: 6px;
   color: var(--ink-2);
   font-size: 13px;
+  font-weight: 600;
 }
 
 .breakdown__macros dd {
   margin: 3px 0 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .breakdown__footnote {
-  padding: 12px 16px 14px;
-  border-top: 1px solid var(--line);
+  padding: 10px 18px 16px;
   color: var(--ink-3);
   font-size: 12px;
   line-height: 1.45;

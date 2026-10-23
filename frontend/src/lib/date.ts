@@ -39,6 +39,15 @@ export function weekDays(key: string): string[] {
 
 const LOCALE = 'en-MY';
 
+/** Everyday Malay greeting for the time of day. */
+export function greeting(now: Date = new Date()): string {
+  const hour = now.getHours();
+  if (hour >= 5 && hour < 12) return 'Selamat pagi';
+  if (hour >= 12 && hour < 15) return 'Selamat tengah hari';
+  if (hour >= 15 && hour < 19) return 'Selamat petang';
+  return 'Selamat malam';
+}
+
 export function formatDayTitle(key: string, today: string = todayKey()): string {
   if (key === today) return 'Today';
   if (key === addDays(today, -1)) return 'Yesterday';

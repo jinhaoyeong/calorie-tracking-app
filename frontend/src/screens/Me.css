@@ -1,0 +1,156 @@
+.me__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: calc(var(--safe-top) + 22px) 0 6px;
+}
+
+.me__avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.me__who {
+  flex: 1;
+  min-width: 0;
+}
+
+.me__who h1 {
+  overflow: hidden;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.me__who p {
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.me__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.me__stat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.me__stat span {
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.me__stat strong {
+  margin-top: 2px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.me__stat small {
+  overflow: hidden;
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.me__stat--healthy small {
+  color: var(--accent-strong);
+}
+
+.me__stat--overweight small,
+.me__stat--underweight small {
+  color: var(--warning-text);
+}
+
+.me__stat--obese small {
+  color: var(--danger-text);
+}
+
+.me__note {
+  margin: 10px 4px 0;
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.status {
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status--online {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.status--offline {
+  background: var(--danger-soft);
+  color: var(--danger-text);
+}
+
+.me__model-note {
+  padding: 0 16px 16px 68px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.me__privacy p {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.me__privacy p svg {
+  flex: none;
+  color: var(--accent-strong);
+}
+
+.me__about {
+  margin: 22px 4px 0;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.me__about p + p {
+  margin-top: 8px;
+}
+
+.me__version {
+  text-align: center;
+}
+
+.me__delete {
+  background: var(--danger);
+  color: #fff;
+}

@@ -1,0 +1,81 @@
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.week__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0 6px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--ink-2);
+}
+
+.week__day:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.week__day.is-selected {
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.week__name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.week__day.is-today .week__name {
+  color: var(--accent-strong);
+}
+
+.week__circle {
+  position: relative;
+  width: 38px;
+  height: 38px;
+}
+
+.week__circle svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.week__track {
+  fill: none;
+  stroke: var(--surface-3);
+  stroke-width: 3;
+  stroke-dasharray: 2.4 3.2;
+}
+
+.week__day.is-selected .week__track {
+  stroke-dasharray: none;
+}
+
+.week__progress {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.week__progress--over {
+  stroke: var(--danger);
+}
+
+.week__date {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 800;
+}

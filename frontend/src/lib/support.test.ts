@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, formatDayTitle, isDateKey, startOfWeek, toDateKey, weekDays } from './date';
-import { FOODS, findFood, searchFoods } from './foods';
+import { addDays, formatDayTitle, greeting, isDateKey, startOfWeek, toDateKey, weekDays } from './date';
+import { CATEGORIES, FOODS, findFood, isVisible, SCAN_FOODS, searchFoods } from './foods';
 import { formatCompact, formatGrams, formatKcal, formatSigned } from './format';
 import { checkImage, MAX_UPLOAD_BYTES, sniffImageKind } from './image';
 
@@ -28,6 +28,13 @@ describe('dates', () => {
     expect(isDateKey(null)).toBe(false);
   });
 
+  it('greets in Malay by time of day', () => {
+    expect(greeting(new Date(2026, 9, 23, 8))).toBe('Selamat pagi');
+    expect(greeting(new Date(2026, 9, 23, 13))).toBe('Selamat tengah hari');
+    expect(greeting(new Date(2026, 9, 23, 17))).toBe('Selamat petang');
+    expect(greeting(new Date(2026, 9, 23, 22))).toBe('Selamat malam');
+  });
+
   it('names nearby days', () => {
     expect(formatDayTitle('2026-10-23', '2026-10-23')).toBe('Today');
     expect(formatDayTitle('2026-10-22', '2026-10-23')).toBe('Yesterday');
@@ -36,8 +43,8 @@ describe('dates', () => {
 });
 
 describe('food database', () => {
-  it('contains exactly the ten proposal classes', () => {
-    expect(FOODS.map((f) => f.id).sort()).toEqual(
+  it('marks exactly the ten proposal classes as scan-ready', () => {
+    expect(SCAN_FOODS.map((f) => f.id).sort()).toEqual(
       [
         'char_kuey_teow',
         'chicken_rice',
@@ -53,15 +60,32 @@ describe('food database', () => {
     );
   });
 
-  it('returns undefined for a class with no nutrition entry', () => {
-    expect(findFood('kuih_lapis')).toBeUndefined();
+  it('covers everyday Malaysian food beyond the scan classes', () => {
+    expect(FOODS.length).toBeGreaterThanOrEqual(70);
+    const categories = new Set(FOODS.map((f) => f.category));
+    for (const c of CATEGORIES) expect(categories.has(c.id)).toBe(true);
+    for (const food of FOODS) expect(food.serving.localLabel).toBeTruthy();
   });
 
-  it('searches names, local names and descriptions', () => {
-    expect(searchFoods('nasi ayam').map((f) => f.id)).toEqual(['chicken_rice']);
-    expect(searchFoods('  ROTI ').map((f) => f.id)).toEqual(['roti_canai']);
-    expect(searchFoods('')).toHaveLength(10);
+  it('returns undefined for a class with no nutrition entry', () => {
+    expect(findFood('kuih_bahulu')).toBeUndefined();
+  });
+
+  it('finds food by English, Malay and common names', () => {
+    expect(searchFoods('nasi ayam')[0].id).toBe('chicken_rice');
+    expect(searchFoods('  ROTI ')[0].id).toBe('roti_canai');
+    expect(searchFoods('abc')[0].id).toBe('ais_kacang');
+    expect(searchFoods('kopi o')[0].id).toBe('kopi_o');
+    expect(searchFoods('teh').map((f) => f.id)).toEqual(expect.arrayContaining(['teh_tarik', 'teh_o', 'teh_o_ais_limau']));
+    expect(searchFoods('')).toHaveLength(FOODS.length);
     expect(searchFoods('pizza')).toEqual([]);
+  });
+
+  it('can hide food that usually contains pork', () => {
+    const pork = FOODS.filter((f) => !isVisible(f, true)).map((f) => f.id);
+    expect(pork).toEqual(expect.arrayContaining(['bak_kut_teh', 'char_siu_pau']));
+    expect(pork).not.toContain('nasi_lemak');
+    expect(FOODS.every((f) => isVisible(f, false))).toBe(true);
   });
 });
 
@@ -101,5 +125,14 @@ describe('formatting', () => {
 
   it('keeps every food lookup by id stable', () => {
     for (const food of FOODS) expect(findFood(food.id)).toBe(food);
+  });
+});
+
+describe('formatConfidence', () => {
+  it('never shows a real score as 0%', async () => {
+    const { formatConfidence } = await import('./format');
+    expect(formatConfidence(0.873)).toBe('87%');
+    expect(formatConfidence(0.003)).toBe('<1%');
+    expect(formatConfidence(0)).toBe('0%');
   });
 });

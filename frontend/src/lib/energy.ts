@@ -84,11 +84,35 @@ export function macroTargets(weightKg: number, targetKcal: number): MacroTargets
   return { carbohydrateG, proteinG, fatG };
 }
 
+/** Body mass index, kg/m². */
+export function bmi(heightCm: number, weightKg: number): number {
+  const metres = heightCm / 100;
+  return Math.round((weightKg / (metres * metres)) * 10) / 10;
+}
+
+export type BmiBand = 'underweight' | 'healthy' | 'overweight' | 'obese';
+
+/**
+ * Asian cut-offs used by the Malaysian Clinical Practice Guidelines on obesity:
+ * overweight from 23.0 and obese from 27.5, lower than the WHO international bands.
+ */
+export function bmiBand(value: number): { band: BmiBand; label: string; range: string } {
+  if (value < 18.5) return { band: 'underweight', label: 'Underweight', range: 'below 18.5' };
+  if (value < 23) return { band: 'healthy', label: 'Healthy', range: '18.5–22.9' };
+  if (value < 27.5) return { band: 'overweight', label: 'Overweight', range: '23.0–27.4' };
+  return { band: 'obese', label: 'Obese', range: '27.5 and above' };
+}
+
+export const NAME_MAX_LENGTH = 30;
+
 export type ProfileDraft = Partial<Omit<Profile, 'updatedAt'>>;
 export type ProfileErrors = Partial<Record<keyof ProfileDraft, string>>;
 
 export function validateProfile(draft: ProfileDraft): ProfileErrors {
   const errors: ProfileErrors = {};
+  if (draft.name !== undefined && draft.name.trim().length > NAME_MAX_LENGTH) {
+    errors.name = `Keep it under ${NAME_MAX_LENGTH} characters.`;
+  }
   if (!draft.sex) errors.sex = 'Choose one to continue.';
   const ranges: [keyof typeof PROFILE_LIMITS, string, string][] = [
     ['age', 'Age', 'years'],
@@ -110,5 +134,5 @@ export function validateProfile(draft: ProfileDraft): ProfileErrors {
 }
 
 export function isCompleteProfile(draft: ProfileDraft): draft is Omit<Profile, 'updatedAt'> {
-  return Object.keys(validateProfile(draft)).length === 0;
+  return typeof draft.name === 'string' && Object.keys(validateProfile(draft)).length === 0;
 }

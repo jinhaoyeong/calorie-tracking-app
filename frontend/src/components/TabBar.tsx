@@ -1,19 +1,23 @@
+import { BowlFood, Camera, ChartBar, House, User, type Icon } from '@phosphor-icons/react';
 import { Link, NavLink } from 'react-router-dom';
-import { Icon, type IconName } from './Icon';
 import './TabBar.css';
 
-const TABS: { to: string; label: string; icon: IconName }[] = [
-  { to: '/', label: 'Diary', icon: 'diary' },
-  { to: '/progress', label: 'Progress', icon: 'progress' },
-  { to: '/dishes', label: 'Dishes', icon: 'dishes' },
-  { to: '/profile', label: 'Profile', icon: 'profile' },
+const TABS: { to: string; label: string; icon: Icon }[] = [
+  { to: '/', label: 'Home', icon: House },
+  { to: '/progress', label: 'Progress', icon: ChartBar },
+  { to: '/foods', label: 'Foods', icon: BowlFood },
+  { to: '/me', label: 'Me', icon: User },
 ];
 
-function Tab({ to, label, icon }: (typeof TABS)[number]) {
+function Tab({ to, label, icon: TabIcon }: (typeof TABS)[number]) {
   return (
     <NavLink to={to} end={to === '/'} className="tabbar__item">
-      <Icon name={icon} size={24} />
-      <span>{label}</span>
+      {({ isActive }) => (
+        <>
+          <TabIcon size={26} weight={isActive ? 'fill' : 'regular'} />
+          <span>{label}</span>
+        </>
+      )}
     </NavLink>
   );
 }
@@ -23,11 +27,8 @@ export function TabBar() {
     <nav className="tabbar" aria-label="Main">
       <Tab {...TABS[0]} />
       <Tab {...TABS[1]} />
-      <Link to="/scan" className="tabbar__scan" aria-label="Scan a dish">
-        <span className="tabbar__scan-button">
-          <Icon name="camera" size={26} strokeWidth={1.9} />
-        </span>
-        <span>Scan</span>
+      <Link to="/scan" className="tabbar__scan" aria-label="Scan food">
+        <Camera size={28} weight="fill" />
       </Link>
       <Tab {...TABS[2]} />
       <Tab {...TABS[3]} />

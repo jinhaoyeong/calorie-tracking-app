@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { TabBar } from './components/TabBar';
-import { Diary } from './screens/Diary';
-import { DishDetail } from './screens/DishDetail';
-import { Dishes } from './screens/Dishes';
+import { CreateFood } from './screens/CreateFood';
 import { EditProfile } from './screens/EditProfile';
+import { FoodDetail } from './screens/FoodDetail';
+import { Foods } from './screens/Foods';
+import { Home } from './screens/Home';
+import { Me } from './screens/Me';
 import { Onboarding } from './screens/Onboarding';
-import { Profile } from './screens/Profile';
 import { Progress } from './screens/Progress';
 import { Scan } from './screens/Scan';
 import { AppStateProvider, useApp } from './state/AppState';
@@ -48,14 +49,15 @@ export function App() {
               <Route path="/welcome" element={<WelcomeRoute />} />
               <Route element={<RequireProfile />}>
                 <Route element={<TabLayout />}>
-                  <Route index element={<Diary />} />
+                  <Route index element={<Home />} />
                   <Route path="progress" element={<Progress />} />
-                  <Route path="dishes" element={<Dishes />} />
-                  <Route path="profile" element={<Profile />} />
+                  <Route path="foods" element={<Foods />} />
+                  <Route path="me" element={<Me />} />
                 </Route>
-                <Route path="dishes/:id" element={<DishDetail />} />
+                <Route path="foods/new" element={<CreateFood />} />
+                <Route path="foods/:id" element={<FoodDetail />} />
                 <Route path="scan" element={<Scan />} />
-                <Route path="profile/edit" element={<EditProfile />} />
+                <Route path="me/edit" element={<EditProfile />} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

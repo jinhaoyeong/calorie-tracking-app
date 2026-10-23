@@ -1,5 +1,5 @@
+import { X } from '@phosphor-icons/react';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { Icon } from './Icon';
 import './BottomSheet.css';
 
 interface Props {
@@ -38,8 +38,8 @@ export function BottomSheet({ title, onClose, children, footer }: Props) {
           <h2 id={titleId} className="sheet__title">
             {title}
           </h2>
-          <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
-            <Icon name="close" />
+          <button type="button" className="round-button round-button--soft" onClick={onClose} aria-label="Close">
+            <X size={18} weight="bold" />
           </button>
         </div>
         <div className="sheet__body">{children}</div>

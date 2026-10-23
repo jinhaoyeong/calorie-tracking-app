@@ -1,19 +1,78 @@
 {
-  "version": "2026.10",
+  "version": "2026.11",
   "basis": "Energy and macronutrients per standard serving. Reference values compiled for the prototype from published Malaysian and regional food-composition figures; each entry should be checked against the Malaysian Food Composition Database (MyFCD) before final evaluation.",
   "source_url": "https://myfcd.moh.gov.my/",
+  "categories": [
+    {
+      "id": "rice",
+      "name": "Rice",
+      "local_name": "Nasi"
+    },
+    {
+      "id": "noodles",
+      "name": "Noodles",
+      "local_name": "Mee & kuey teow"
+    },
+    {
+      "id": "bread",
+      "name": "Roti",
+      "local_name": "Roti & thosai"
+    },
+    {
+      "id": "mains",
+      "name": "Lauk",
+      "local_name": "Lauk-pauk"
+    },
+    {
+      "id": "kuih",
+      "name": "Kuih & snacks",
+      "local_name": "Kuih-muih"
+    },
+    {
+      "id": "dessert",
+      "name": "Desserts",
+      "local_name": "Pencuci mulut"
+    },
+    {
+      "id": "drinks",
+      "name": "Drinks",
+      "local_name": "Minuman"
+    },
+    {
+      "id": "fruit",
+      "name": "Fruit",
+      "local_name": "Buah-buahan"
+    }
+  ],
   "foods": [
     {
       "id": "nasi_lemak",
       "name": "Nasi lemak",
-      "local_name": "Nasi lemak bungkus",
+      "local_name": "Nasi lemak biasa",
       "description": "Coconut rice with sambal, fried anchovies, peanuts, boiled egg and cucumber",
       "category": "rice",
-      "serving": { "label": "1 packet", "grams": 200 },
+      "serving": {
+        "label": "1 packet",
+        "local_label": "1 bungkus",
+        "grams": 200
+      },
       "energy_kcal": 389,
       "carbohydrate_g": 46,
       "protein_g": 11,
-      "fat_g": 18
+      "fat_g": 18,
+      "scan": true,
+      "addons": [
+        "ayam_goreng",
+        "telur_mata",
+        "rendang_ayam",
+        "sotong_sambal",
+        "sambal",
+        "nasi_tambah"
+      ],
+      "aliases": [
+        "coconut rice",
+        "nasi lemak bungkus"
+      ]
     },
     {
       "id": "roti_canai",
@@ -21,11 +80,25 @@
       "local_name": "Roti canai kosong",
       "description": "Plain flaky flatbread, served without dhal or curry",
       "category": "bread",
-      "serving": { "label": "1 piece", "grams": 95 },
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 95
+      },
       "energy_kcal": 301,
       "carbohydrate_g": 38,
       "protein_g": 6,
-      "fat_g": 14
+      "fat_g": 14,
+      "scan": true,
+      "addons": [
+        "kuah_dhal",
+        "kuah_kari",
+        "sambal"
+      ],
+      "aliases": [
+        "roti kosong",
+        "prata"
+      ]
     },
     {
       "id": "chicken_rice",
@@ -33,11 +106,25 @@
       "local_name": "Nasi ayam",
       "description": "Roasted or steamed chicken with seasoned rice, chilli sauce and cucumber",
       "category": "rice",
-      "serving": { "label": "1 plate", "grams": 380 },
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 380
+      },
       "energy_kcal": 607,
       "carbohydrate_g": 75,
       "protein_g": 25,
-      "fat_g": 23
+      "fat_g": 23,
+      "scan": true,
+      "addons": [
+        "ayam_tambah",
+        "telur_rebus",
+        "sayur"
+      ],
+      "aliases": [
+        "nasi ayam",
+        "hainanese chicken rice"
+      ]
     },
     {
       "id": "char_kuey_teow",
@@ -45,11 +132,23 @@
       "local_name": "Kuey teow goreng",
       "description": "Wok-fried flat rice noodles with prawns, cockles, egg, bean sprouts and chives",
       "category": "noodles",
-      "serving": { "label": "1 plate", "grams": 380 },
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 380
+      },
       "energy_kcal": 742,
       "carbohydrate_g": 76,
       "protein_g": 23,
-      "fat_g": 38
+      "fat_g": 38,
+      "scan": true,
+      "addons": [
+        "telur_mata"
+      ],
+      "aliases": [
+        "ckt",
+        "fried kuey teow"
+      ]
     },
     {
       "id": "mee_goreng_mamak",
@@ -57,11 +156,24 @@
       "local_name": "Mee goreng mamak",
       "description": "Spicy fried yellow noodles with egg, tofu, potato and vegetables",
       "category": "noodles",
-      "serving": { "label": "1 plate", "grams": 350 },
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 350
+      },
       "energy_kcal": 660,
       "carbohydrate_g": 80,
       "protein_g": 18,
-      "fat_g": 30
+      "fat_g": 30,
+      "scan": true,
+      "addons": [
+        "telur_mata",
+        "ayam_goreng"
+      ],
+      "aliases": [
+        "mee goreng",
+        "fried noodles"
+      ]
     },
     {
       "id": "nasi_goreng",
@@ -69,11 +181,24 @@
       "local_name": "Nasi goreng kampung",
       "description": "Fried rice with egg, chilli paste, vegetables and anchovies",
       "category": "rice",
-      "serving": { "label": "1 plate", "grams": 350 },
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 350
+      },
       "energy_kcal": 637,
       "carbohydrate_g": 85,
       "protein_g": 18,
-      "fat_g": 25
+      "fat_g": 25,
+      "scan": true,
+      "addons": [
+        "telur_mata",
+        "ayam_goreng"
+      ],
+      "aliases": [
+        "fried rice",
+        "nasi goreng kampung"
+      ]
     },
     {
       "id": "laksa",
@@ -81,35 +206,72 @@
       "local_name": "Laksa kari",
       "description": "Curry laksa: rice noodles in spiced coconut broth with tofu puffs and bean sprouts",
       "category": "noodles",
-      "serving": { "label": "1 bowl", "grams": 500 },
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 500
+      },
       "energy_kcal": 589,
       "carbohydrate_g": 55,
       "protein_g": 20,
-      "fat_g": 32
+      "fat_g": 32,
+      "scan": true,
+      "addons": [
+        "telur_rebus"
+      ],
+      "aliases": [
+        "curry laksa",
+        "laksa kari"
+      ]
     },
     {
       "id": "satay",
       "name": "Satay",
       "local_name": "Sate ayam",
       "description": "Grilled chicken skewers with peanut sauce",
-      "category": "skewer",
-      "serving": { "label": "10 sticks with sauce", "grams": 200 },
+      "category": "mains",
+      "serving": {
+        "label": "10 sticks with sauce",
+        "local_label": "10 cucuk",
+        "grams": 200
+      },
       "energy_kcal": 458,
       "carbohydrate_g": 18,
       "protein_g": 38,
-      "fat_g": 26
+      "fat_g": 26,
+      "scan": true,
+      "addons": [
+        "ketupat",
+        "kuah_kacang"
+      ],
+      "aliases": [
+        "sate",
+        "sate ayam"
+      ]
     },
     {
       "id": "rendang",
       "name": "Rendang",
       "local_name": "Rendang daging",
       "description": "Beef slow-cooked in coconut milk and spices until dry",
-      "category": "curry",
-      "serving": { "label": "1 serving", "grams": 100 },
+      "category": "mains",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 100
+      },
       "energy_kcal": 282,
       "carbohydrate_g": 8,
       "protein_g": 22,
-      "fat_g": 18
+      "fat_g": 18,
+      "scan": true,
+      "addons": [
+        "nasi_tambah"
+      ],
+      "aliases": [
+        "beef rendang",
+        "rendang daging"
+      ]
     },
     {
       "id": "thosai",
@@ -117,11 +279,1389 @@
       "local_name": "Thosai kosong",
       "description": "Plain fermented rice and lentil crepe, served without chutney or sambar",
       "category": "bread",
-      "serving": { "label": "1 piece", "grams": 100 },
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 100
+      },
       "energy_kcal": 168,
       "carbohydrate_g": 30,
       "protein_g": 4,
+      "fat_g": 3.5,
+      "scan": true,
+      "addons": [
+        "kuah_dhal",
+        "kuah_kari"
+      ],
+      "aliases": [
+        "dosa",
+        "tosai"
+      ]
+    },
+    {
+      "id": "nasi_kandar",
+      "name": "Nasi kandar",
+      "local_name": "Nasi kandar",
+      "description": "Rice with fried chicken, mixed curries poured over (banjir) and vegetables",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 450
+      },
+      "energy_kcal": 845,
+      "carbohydrate_g": 95,
+      "protein_g": 38,
+      "fat_g": 35,
+      "addons": [
+        "telur_mata",
+        "ayam_goreng",
+        "sayur"
+      ],
+      "aliases": [
+        "nasi banjir"
+      ]
+    },
+    {
+      "id": "nasi_campur",
+      "name": "Nasi campur",
+      "local_name": "Nasi campur",
+      "description": "Economy rice with one meat and two vegetable dishes",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 400
+      },
+      "energy_kcal": 640,
+      "carbohydrate_g": 80,
+      "protein_g": 26,
+      "fat_g": 24,
+      "addons": [
+        "telur_mata",
+        "ayam_goreng",
+        "sayur"
+      ],
+      "aliases": [
+        "economy rice",
+        "chap fan",
+        "mixed rice"
+      ]
+    },
+    {
+      "id": "nasi_kerabu",
+      "name": "Nasi kerabu",
+      "local_name": "Nasi kerabu",
+      "description": "Blue rice with herbs, fish floss, salted egg and solok lada",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 350
+      },
+      "energy_kcal": 560,
+      "carbohydrate_g": 80,
+      "protein_g": 22,
+      "fat_g": 17,
+      "addons": [
+        "ayam_goreng"
+      ],
+      "aliases": [
+        "blue rice"
+      ]
+    },
+    {
+      "id": "nasi_dagang",
+      "name": "Nasi dagang",
+      "local_name": "Nasi dagang",
+      "description": "Coconut-steamed rice with tuna curry, a Terengganu and Kelantan favourite",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 350
+      },
+      "energy_kcal": 585,
+      "carbohydrate_g": 82,
+      "protein_g": 22,
+      "fat_g": 19
+    },
+    {
+      "id": "nasi_briyani",
+      "name": "Nasi briyani ayam",
+      "local_name": "Nasi briyani",
+      "description": "Spiced basmati rice with chicken curry and dalca",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 400
+      },
+      "energy_kcal": 780,
+      "carbohydrate_g": 95,
+      "protein_g": 35,
+      "fat_g": 29,
+      "addons": [
+        "telur_rebus"
+      ],
+      "aliases": [
+        "biryani",
+        "briyani"
+      ]
+    },
+    {
+      "id": "nasi_putih",
+      "name": "Plain rice",
+      "local_name": "Nasi putih",
+      "description": "Steamed white rice",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 200
+      },
+      "energy_kcal": 255,
+      "carbohydrate_g": 58,
+      "protein_g": 5.2,
+      "fat_g": 0.5,
+      "addons": [
+        "telur_mata",
+        "ayam_goreng",
+        "sayur"
+      ],
+      "aliases": [
+        "white rice",
+        "rice"
+      ]
+    },
+    {
+      "id": "nasi_ayam_penyet",
+      "name": "Ayam penyet",
+      "local_name": "Nasi ayam penyet",
+      "description": "Smashed fried chicken with rice, sambal, tempeh and tofu",
+      "category": "rice",
+      "serving": {
+        "label": "1 set",
+        "local_label": "1 set",
+        "grams": 400
+      },
+      "energy_kcal": 710,
+      "carbohydrate_g": 70,
+      "protein_g": 40,
+      "fat_g": 30
+    },
+    {
+      "id": "nasi_goreng_pattaya",
+      "name": "Nasi goreng pattaya",
+      "local_name": "Nasi goreng pattaya",
+      "description": "Fried rice wrapped in an omelette",
+      "category": "rice",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 380
+      },
+      "energy_kcal": 700,
+      "carbohydrate_g": 88,
+      "protein_g": 24,
+      "fat_g": 28
+    },
+    {
+      "id": "bubur_ayam",
+      "name": "Chicken porridge",
+      "local_name": "Bubur ayam",
+      "description": "Rice porridge with shredded chicken, ginger and fried shallots",
+      "category": "rice",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 400
+      },
+      "energy_kcal": 300,
+      "carbohydrate_g": 45,
+      "protein_g": 15,
+      "fat_g": 6.5,
+      "aliases": [
+        "porridge",
+        "congee"
+      ]
+    },
+    {
+      "id": "asam_laksa",
+      "name": "Asam laksa",
+      "local_name": "Laksa Penang",
+      "description": "Thick rice noodles in a sour mackerel and tamarind broth",
+      "category": "noodles",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 450
+      },
+      "energy_kcal": 440,
+      "carbohydrate_g": 70,
+      "protein_g": 22,
+      "fat_g": 8,
+      "aliases": [
+        "penang laksa"
+      ]
+    },
+    {
+      "id": "mee_rebus",
+      "name": "Mee rebus",
+      "local_name": "Mee rebus",
+      "description": "Yellow noodles in a thick sweet potato gravy with egg and tofu",
+      "category": "noodles",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 450
+      },
+      "energy_kcal": 555,
+      "carbohydrate_g": 80,
+      "protein_g": 20,
+      "fat_g": 17
+    },
+    {
+      "id": "mee_kari",
+      "name": "Curry mee",
+      "local_name": "Mee kari",
+      "description": "Yellow noodles and bihun in curry broth with tofu puffs and chicken",
+      "category": "noodles",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 500
+      },
+      "energy_kcal": 580,
+      "carbohydrate_g": 60,
+      "protein_g": 22,
+      "fat_g": 28,
+      "aliases": [
+        "curry noodles"
+      ]
+    },
+    {
+      "id": "wantan_mee",
+      "name": "Wantan mee",
+      "local_name": "Mee wantan",
+      "description": "Springy egg noodles with char siu and wantan dumplings, dry style",
+      "category": "noodles",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 300
+      },
+      "energy_kcal": 410,
+      "carbohydrate_g": 58,
+      "protein_g": 17,
+      "fat_g": 12,
+      "pork": true,
+      "aliases": [
+        "wonton noodles",
+        "wan tan mee"
+      ]
+    },
+    {
+      "id": "pan_mee",
+      "name": "Pan mee",
+      "local_name": "Mee hoon kueh",
+      "description": "Hand-made noodles in anchovy soup with minced meat and mushrooms",
+      "category": "noodles",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 450
+      },
+      "energy_kcal": 470,
+      "carbohydrate_g": 62,
+      "protein_g": 22,
+      "fat_g": 15,
+      "pork": true,
+      "aliases": [
+        "mee hoon kueh"
+      ]
+    },
+    {
+      "id": "hokkien_mee",
+      "name": "Hokkien mee",
+      "local_name": "Hokkien mee (KL)",
+      "description": "Thick noodles braised in dark soy sauce with pork and prawns",
+      "category": "noodles",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 380
+      },
+      "energy_kcal": 605,
+      "carbohydrate_g": 68,
+      "protein_g": 22,
+      "fat_g": 27,
+      "pork": true,
+      "aliases": [
+        "hokkien char"
+      ]
+    },
+    {
+      "id": "kuey_teow_sup",
+      "name": "Kuey teow soup",
+      "local_name": "Kuey teow sup",
+      "description": "Flat rice noodles in clear soup with fish balls and greens",
+      "category": "noodles",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 450
+      },
+      "energy_kcal": 360,
+      "carbohydrate_g": 55,
+      "protein_g": 17,
+      "fat_g": 8,
+      "aliases": [
+        "kway teow soup"
+      ]
+    },
+    {
+      "id": "maggi_goreng",
+      "name": "Maggi goreng",
+      "local_name": "Maggi goreng",
+      "description": "Stir-fried instant noodles mamak style with egg and vegetables",
+      "category": "noodles",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 320
+      },
+      "energy_kcal": 560,
+      "carbohydrate_g": 66,
+      "protein_g": 15,
+      "fat_g": 26,
+      "addons": [
+        "telur_mata"
+      ]
+    },
+    {
+      "id": "bihun_goreng",
+      "name": "Bihun goreng",
+      "local_name": "Bihun goreng",
+      "description": "Fried rice vermicelli with egg, vegetables and chilli",
+      "category": "noodles",
+      "serving": {
+        "label": "1 plate",
+        "local_label": "1 pinggan",
+        "grams": 330
+      },
+      "energy_kcal": 520,
+      "carbohydrate_g": 78,
+      "protein_g": 14,
+      "fat_g": 17,
+      "addons": [
+        "telur_mata"
+      ],
+      "aliases": [
+        "fried bihun",
+        "mee hoon"
+      ]
+    },
+    {
+      "id": "roti_telur",
+      "name": "Roti telur",
+      "local_name": "Roti telur",
+      "description": "Roti canai folded with egg",
+      "category": "bread",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 130
+      },
+      "energy_kcal": 380,
+      "carbohydrate_g": 40,
+      "protein_g": 12,
+      "fat_g": 19,
+      "addons": [
+        "kuah_dhal",
+        "kuah_kari"
+      ]
+    },
+    {
+      "id": "roti_tisu",
+      "name": "Roti tisu",
+      "local_name": "Roti tisu",
+      "description": "Paper-thin roti, often sweetened with sugar and condensed milk",
+      "category": "bread",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 120
+      },
+      "energy_kcal": 425,
+      "carbohydrate_g": 55,
+      "protein_g": 6,
+      "fat_g": 20
+    },
+    {
+      "id": "murtabak",
+      "name": "Murtabak ayam",
+      "local_name": "Murtabak ayam",
+      "description": "Stuffed pan-fried bread with spiced minced chicken, egg and onion",
+      "category": "bread",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 280
+      },
+      "energy_kcal": 685,
+      "carbohydrate_g": 60,
+      "protein_g": 35,
+      "fat_g": 34
+    },
+    {
+      "id": "capati",
+      "name": "Chapati",
+      "local_name": "Capati",
+      "description": "Whole-wheat flatbread cooked without oil",
+      "category": "bread",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 60
+      },
+      "energy_kcal": 180,
+      "carbohydrate_g": 30,
+      "protein_g": 5,
+      "fat_g": 4.5,
+      "addons": [
+        "kuah_dhal",
+        "kuah_kari"
+      ],
+      "aliases": [
+        "chapatti",
+        "capati"
+      ]
+    },
+    {
+      "id": "roti_bakar",
+      "name": "Kaya butter toast",
+      "local_name": "Roti bakar",
+      "description": "Toasted bread with kaya and butter",
+      "category": "bread",
+      "serving": {
+        "label": "2 slices",
+        "local_label": "2 keping",
+        "grams": 80
+      },
+      "energy_kcal": 300,
+      "carbohydrate_g": 38,
+      "protein_g": 6,
+      "fat_g": 14,
+      "aliases": [
+        "roti bakar kaya",
+        "kaya toast"
+      ]
+    },
+    {
+      "id": "roti_jala",
+      "name": "Roti jala",
+      "local_name": "Roti jala",
+      "description": "Lacy net crepes, served without curry",
+      "category": "bread",
+      "serving": {
+        "label": "5 pieces",
+        "local_label": "5 keping",
+        "grams": 120
+      },
+      "energy_kcal": 250,
+      "carbohydrate_g": 38,
+      "protein_g": 8,
+      "fat_g": 7.5,
+      "addons": [
+        "kuah_kari"
+      ]
+    },
+    {
+      "id": "idli",
+      "name": "Idli",
+      "local_name": "Idli",
+      "description": "Steamed rice and lentil cakes",
+      "category": "bread",
+      "serving": {
+        "label": "3 pieces",
+        "local_label": "3 biji",
+        "grams": 150
+      },
+      "energy_kcal": 180,
+      "carbohydrate_g": 38,
+      "protein_g": 6,
+      "fat_g": 0.6,
+      "addons": [
+        "kuah_dhal"
+      ]
+    },
+    {
+      "id": "ayam_goreng",
+      "name": "Fried chicken",
+      "local_name": "Ayam goreng berempah",
+      "description": "Spiced Malay-style fried chicken",
+      "category": "mains",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 ketul",
+        "grams": 120
+      },
+      "energy_kcal": 290,
+      "carbohydrate_g": 8,
+      "protein_g": 22,
+      "fat_g": 19,
+      "aliases": [
+        "ayam goreng"
+      ]
+    },
+    {
+      "id": "ikan_bakar",
+      "name": "Ikan bakar",
+      "local_name": "Ikan bakar",
+      "description": "Grilled fish with sambal, wrapped in banana leaf",
+      "category": "mains",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 150
+      },
+      "energy_kcal": 265,
+      "carbohydrate_g": 6,
+      "protein_g": 35,
+      "fat_g": 11,
+      "aliases": [
+        "grilled fish"
+      ]
+    },
+    {
+      "id": "kari_ayam",
+      "name": "Chicken curry",
+      "local_name": "Kari ayam",
+      "description": "Chicken and potato in coconut curry",
+      "category": "mains",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 200
+      },
+      "energy_kcal": 380,
+      "carbohydrate_g": 10,
+      "protein_g": 28,
+      "fat_g": 25.5,
+      "aliases": [
+        "curry chicken"
+      ]
+    },
+    {
+      "id": "ayam_masak_merah",
+      "name": "Ayam masak merah",
+      "local_name": "Ayam masak merah",
+      "description": "Chicken in a sweet and spicy tomato chilli sauce",
+      "category": "mains",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 180
+      },
+      "energy_kcal": 340,
+      "carbohydrate_g": 14,
+      "protein_g": 26,
+      "fat_g": 20
+    },
+    {
+      "id": "sayur_campur",
+      "name": "Mixed vegetables",
+      "local_name": "Sayur campur",
+      "description": "Stir-fried mixed vegetables",
+      "category": "mains",
+      "serving": {
+        "label": "1 serving",
+        "local_label": "1 hidangan",
+        "grams": 150
+      },
+      "energy_kcal": 120,
+      "carbohydrate_g": 10,
+      "protein_g": 4,
+      "fat_g": 7,
+      "aliases": [
+        "sayur goreng"
+      ]
+    },
+    {
+      "id": "telur_dadar",
+      "name": "Omelette",
+      "local_name": "Telur dadar",
+      "description": "Two-egg omelette with onion and chilli",
+      "category": "mains",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 120
+      },
+      "energy_kcal": 220,
+      "carbohydrate_g": 2,
+      "protein_g": 13,
+      "fat_g": 18,
+      "aliases": [
+        "telur dadar"
+      ]
+    },
+    {
+      "id": "bak_kut_teh",
+      "name": "Bak kut teh",
+      "local_name": "Bak kut teh",
+      "description": "Pork ribs simmered in herbal soup, without rice",
+      "category": "mains",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 450
+      },
+      "energy_kcal": 420,
+      "carbohydrate_g": 10,
+      "protein_g": 32,
+      "fat_g": 28,
+      "pork": true
+    },
+    {
+      "id": "yong_tau_foo",
+      "name": "Yong tau foo",
+      "local_name": "Yong tau foo",
+      "description": "Stuffed tofu and vegetables in clear soup",
+      "category": "mains",
+      "serving": {
+        "label": "6 pieces",
+        "local_label": "6 keping",
+        "grams": 350
+      },
+      "energy_kcal": 325,
+      "carbohydrate_g": 30,
+      "protein_g": 20,
+      "fat_g": 14
+    },
+    {
+      "id": "sup_ayam",
+      "name": "Chicken soup",
+      "local_name": "Sup ayam",
+      "description": "Malay-style spiced chicken soup with potato and carrot",
+      "category": "mains",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 350
+      },
+      "energy_kcal": 220,
+      "carbohydrate_g": 10,
+      "protein_g": 20,
+      "fat_g": 11
+    },
+    {
+      "id": "tauhu_bakar",
+      "name": "Tauhu bakar",
+      "local_name": "Tauhu bakar",
+      "description": "Grilled tofu stuffed with cucumber and sprouts, with peanut sauce",
+      "category": "mains",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 150
+      },
+      "energy_kcal": 230,
+      "carbohydrate_g": 14,
+      "protein_g": 12,
+      "fat_g": 14
+    },
+    {
+      "id": "karipap",
+      "name": "Curry puff",
+      "local_name": "Karipap",
+      "description": "Pastry with spiced potato filling",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 biji",
+        "grams": 50
+      },
+      "energy_kcal": 140,
+      "carbohydrate_g": 16,
+      "protein_g": 3,
+      "fat_g": 7,
+      "aliases": [
+        "epok-epok",
+        "karipap"
+      ]
+    },
+    {
+      "id": "kuih_lapis",
+      "name": "Kuih lapis",
+      "local_name": "Kuih lapis",
+      "description": "Steamed layered rice flour cake",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 40
+      },
+      "energy_kcal": 125,
+      "carbohydrate_g": 22,
+      "protein_g": 1,
+      "fat_g": 3.5,
+      "aliases": [
+        "layer cake"
+      ]
+    },
+    {
+      "id": "onde_onde",
+      "name": "Onde-onde",
+      "local_name": "Onde-onde",
+      "description": "Pandan glutinous rice balls with palm sugar and coconut",
+      "category": "kuih",
+      "serving": {
+        "label": "3 pieces",
+        "local_label": "3 biji",
+        "grams": 45
+      },
+      "energy_kcal": 130,
+      "carbohydrate_g": 25,
+      "protein_g": 1.5,
+      "fat_g": 2.5,
+      "aliases": [
+        "buah melaka"
+      ]
+    },
+    {
+      "id": "pisang_goreng",
+      "name": "Banana fritter",
+      "local_name": "Pisang goreng",
+      "description": "Battered fried banana",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 60
+      },
+      "energy_kcal": 130,
+      "carbohydrate_g": 18,
+      "protein_g": 1.5,
+      "fat_g": 6,
+      "aliases": [
+        "goreng pisang"
+      ]
+    },
+    {
+      "id": "keropok_lekor",
+      "name": "Keropok lekor",
+      "local_name": "Keropok lekor",
+      "description": "Fried fish sausage from Terengganu with chilli sauce",
+      "category": "kuih",
+      "serving": {
+        "label": "5 pieces",
+        "local_label": "5 batang",
+        "grams": 100
+      },
+      "energy_kcal": 230,
+      "carbohydrate_g": 30,
+      "protein_g": 9,
+      "fat_g": 8
+    },
+    {
+      "id": "apam_balik",
+      "name": "Apam balik",
+      "local_name": "Apam balik",
+      "description": "Folded pancake with peanuts, sugar and sweet corn",
+      "category": "kuih",
+      "serving": {
+        "label": "1 slice",
+        "local_label": "1 potong",
+        "grams": 80
+      },
+      "energy_kcal": 250,
+      "carbohydrate_g": 38,
+      "protein_g": 6,
+      "fat_g": 8,
+      "aliases": [
+        "ban chang kuih",
+        "peanut pancake"
+      ]
+    },
+    {
+      "id": "popiah",
+      "name": "Popiah",
+      "local_name": "Popiah basah",
+      "description": "Fresh spring roll with turnip, egg and sauce",
+      "category": "kuih",
+      "serving": {
+        "label": "1 roll",
+        "local_label": "1 batang",
+        "grams": 120
+      },
+      "energy_kcal": 190,
+      "carbohydrate_g": 26,
+      "protein_g": 6,
+      "fat_g": 7,
+      "aliases": [
+        "spring roll"
+      ]
+    },
+    {
+      "id": "cucur_udang",
+      "name": "Prawn fritter",
+      "local_name": "Cucur udang",
+      "description": "Deep-fried prawn and vegetable fritter",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 biji",
+        "grams": 50
+      },
+      "energy_kcal": 155,
+      "carbohydrate_g": 14,
+      "protein_g": 4,
+      "fat_g": 9
+    },
+    {
+      "id": "kuih_seri_muka",
+      "name": "Seri muka",
+      "local_name": "Kuih seri muka",
+      "description": "Glutinous rice topped with pandan custard",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 keping",
+        "grams": 60
+      },
+      "energy_kcal": 155,
+      "carbohydrate_g": 25,
+      "protein_g": 2,
+      "fat_g": 5
+    },
+    {
+      "id": "char_siu_pau",
+      "name": "Char siu pau",
+      "local_name": "Pau char siu",
+      "description": "Steamed bun with barbecued pork filling",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 biji",
+        "grams": 70
+      },
+      "energy_kcal": 180,
+      "carbohydrate_g": 28,
+      "protein_g": 7,
+      "fat_g": 4.5,
+      "pork": true,
+      "aliases": [
+        "bao",
+        "pau"
+      ]
+    },
+    {
+      "id": "pau_kacang",
+      "name": "Red bean bun",
+      "local_name": "Pau kacang merah",
+      "description": "Steamed bun with sweet red bean paste",
+      "category": "kuih",
+      "serving": {
+        "label": "1 piece",
+        "local_label": "1 biji",
+        "grams": 70
+      },
+      "energy_kcal": 170,
+      "carbohydrate_g": 32,
+      "protein_g": 5,
+      "fat_g": 2.5,
+      "aliases": [
+        "pau"
+      ]
+    },
+    {
+      "id": "cendol",
+      "name": "Cendol",
+      "local_name": "Cendol",
+      "description": "Shaved ice with pandan jelly, coconut milk and gula Melaka",
+      "category": "dessert",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 300
+      },
+      "energy_kcal": 380,
+      "carbohydrate_g": 60,
+      "protein_g": 3,
+      "fat_g": 14.5
+    },
+    {
+      "id": "ais_kacang",
+      "name": "Ais kacang",
+      "local_name": "ABC",
+      "description": "Shaved ice with red beans, corn, jelly and syrups",
+      "category": "dessert",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 350
+      },
+      "energy_kcal": 265,
+      "carbohydrate_g": 55,
+      "protein_g": 3,
+      "fat_g": 3.5,
+      "aliases": [
+        "abc",
+        "air batu campur"
+      ]
+    },
+    {
+      "id": "bubur_cha_cha",
+      "name": "Bubur cha cha",
+      "local_name": "Bubur cha cha",
+      "description": "Sweet potato and yam in coconut milk",
+      "category": "dessert",
+      "serving": {
+        "label": "1 bowl",
+        "local_label": "1 mangkuk",
+        "grams": 250
+      },
+      "energy_kcal": 280,
+      "carbohydrate_g": 40,
+      "protein_g": 3,
+      "fat_g": 12
+    },
+    {
+      "id": "teh_tarik",
+      "name": "Teh tarik",
+      "local_name": "Teh tarik",
+      "description": "Pulled milk tea with condensed milk",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 250 ml",
+        "local_label": "1 gelas",
+        "grams": 250
+      },
+      "energy_kcal": 150,
+      "carbohydrate_g": 24,
+      "protein_g": 4,
+      "fat_g": 4,
+      "sugar_g": 20,
+      "aliases": [
+        "milk tea"
+      ]
+    },
+    {
+      "id": "kopi_o",
+      "name": "Kopi O",
+      "local_name": "Kopi O",
+      "description": "Black coffee with sugar",
+      "category": "drinks",
+      "serving": {
+        "label": "1 cup, 200 ml",
+        "local_label": "1 cawan",
+        "grams": 200
+      },
+      "energy_kcal": 70,
+      "carbohydrate_g": 17,
+      "protein_g": 0.3,
+      "fat_g": 0.1,
+      "sugar_g": 16,
+      "aliases": [
+        "black coffee"
+      ]
+    },
+    {
+      "id": "kopi",
+      "name": "Kopi",
+      "local_name": "Kopi susu",
+      "description": "Coffee with condensed milk",
+      "category": "drinks",
+      "serving": {
+        "label": "1 cup, 200 ml",
+        "local_label": "1 cawan",
+        "grams": 200
+      },
+      "energy_kcal": 140,
+      "carbohydrate_g": 22,
+      "protein_g": 3,
+      "fat_g": 4.5,
+      "sugar_g": 18,
+      "aliases": [
+        "white coffee",
+        "kopi susu"
+      ]
+    },
+    {
+      "id": "teh_o",
+      "name": "Teh O",
+      "local_name": "Teh O",
+      "description": "Black tea with sugar",
+      "category": "drinks",
+      "serving": {
+        "label": "1 cup, 200 ml",
+        "local_label": "1 cawan",
+        "grams": 200
+      },
+      "energy_kcal": 60,
+      "carbohydrate_g": 15,
+      "protein_g": 0,
+      "fat_g": 0,
+      "sugar_g": 15,
+      "aliases": [
+        "black tea"
+      ]
+    },
+    {
+      "id": "milo_ais",
+      "name": "Milo ais",
+      "local_name": "Milo ais",
+      "description": "Iced chocolate malt drink with condensed milk",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 300 ml",
+        "local_label": "1 gelas",
+        "grams": 300
+      },
+      "energy_kcal": 210,
+      "carbohydrate_g": 33,
+      "protein_g": 5,
+      "fat_g": 6.5,
+      "sugar_g": 15,
+      "aliases": [
+        "milo",
+        "iced milo"
+      ]
+    },
+    {
+      "id": "sirap_bandung",
+      "name": "Sirap bandung",
+      "local_name": "Air bandung",
+      "description": "Rose syrup with evaporated milk",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 300 ml",
+        "local_label": "1 gelas",
+        "grams": 300
+      },
+      "energy_kcal": 190,
+      "carbohydrate_g": 36,
+      "protein_g": 3,
+      "fat_g": 3.5,
+      "sugar_g": 25,
+      "aliases": [
+        "bandung"
+      ]
+    },
+    {
+      "id": "teh_o_ais_limau",
+      "name": "Teh O ais limau",
+      "local_name": "Teh O ais limau",
+      "description": "Iced lime tea",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 300 ml",
+        "local_label": "1 gelas",
+        "grams": 300
+      },
+      "energy_kcal": 90,
+      "carbohydrate_g": 22,
+      "protein_g": 0,
+      "fat_g": 0,
+      "sugar_g": 20,
+      "aliases": [
+        "iced lemon tea",
+        "lime tea"
+      ]
+    },
+    {
+      "id": "limau_ais",
+      "name": "Limau ais",
+      "local_name": "Air limau ais",
+      "description": "Iced calamansi lime juice",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 300 ml",
+        "local_label": "1 gelas",
+        "grams": 300
+      },
+      "energy_kcal": 100,
+      "carbohydrate_g": 25,
+      "protein_g": 0,
+      "fat_g": 0,
+      "sugar_g": 22,
+      "aliases": [
+        "lime juice",
+        "kasturi"
+      ]
+    },
+    {
+      "id": "air_kelapa",
+      "name": "Coconut water",
+      "local_name": "Air kelapa",
+      "description": "Fresh young coconut water",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 250 ml",
+        "local_label": "1 gelas",
+        "grams": 250
+      },
+      "energy_kcal": 50,
+      "carbohydrate_g": 11,
+      "protein_g": 0.5,
+      "fat_g": 0.5,
+      "aliases": [
+        "air kelapa muda"
+      ]
+    },
+    {
+      "id": "susu_soya",
+      "name": "Soya bean milk",
+      "local_name": "Air soya",
+      "description": "Sweetened soya bean drink",
+      "category": "drinks",
+      "serving": {
+        "label": "1 glass, 250 ml",
+        "local_label": "1 gelas",
+        "grams": 250
+      },
+      "energy_kcal": 140,
+      "carbohydrate_g": 18,
+      "protein_g": 7,
+      "fat_g": 4.5,
+      "sugar_g": 12,
+      "aliases": [
+        "soy milk",
+        "tau chui"
+      ]
+    },
+    {
+      "id": "pisang",
+      "name": "Banana",
+      "local_name": "Pisang",
+      "description": "Pisang berangan, medium",
+      "category": "fruit",
+      "serving": {
+        "label": "1 medium",
+        "local_label": "1 biji",
+        "grams": 100
+      },
+      "energy_kcal": 95,
+      "carbohydrate_g": 22,
+      "protein_g": 1.1,
+      "fat_g": 0.3
+    },
+    {
+      "id": "betik",
+      "name": "Papaya",
+      "local_name": "Betik",
+      "description": "Ripe papaya",
+      "category": "fruit",
+      "serving": {
+        "label": "1 slice",
+        "local_label": "1 potong",
+        "grams": 150
+      },
+      "energy_kcal": 65,
+      "carbohydrate_g": 15,
+      "protein_g": 0.6,
+      "fat_g": 0.4
+    },
+    {
+      "id": "tembikai",
+      "name": "Watermelon",
+      "local_name": "Tembikai",
+      "description": "Red watermelon",
+      "category": "fruit",
+      "serving": {
+        "label": "1 slice",
+        "local_label": "1 potong",
+        "grams": 200
+      },
+      "energy_kcal": 70,
+      "carbohydrate_g": 15,
+      "protein_g": 1.2,
+      "fat_g": 0.3
+    },
+    {
+      "id": "durian",
+      "name": "Durian",
+      "local_name": "Durian",
+      "description": "Durian flesh",
+      "category": "fruit",
+      "serving": {
+        "label": "3 seeds",
+        "local_label": "3 ulas",
+        "grams": 100
+      },
+      "energy_kcal": 155,
+      "carbohydrate_g": 26,
+      "protein_g": 1.5,
+      "fat_g": 5
+    },
+    {
+      "id": "mangga",
+      "name": "Mango",
+      "local_name": "Mangga",
+      "description": "Ripe mango",
+      "category": "fruit",
+      "serving": {
+        "label": "1 medium",
+        "local_label": "1 biji",
+        "grams": 200
+      },
+      "energy_kcal": 125,
+      "carbohydrate_g": 28,
+      "protein_g": 1.6,
+      "fat_g": 0.6
+    },
+    {
+      "id": "jambu_batu",
+      "name": "Guava",
+      "local_name": "Jambu batu",
+      "description": "Guava",
+      "category": "fruit",
+      "serving": {
+        "label": "1 fruit",
+        "local_label": "1 biji",
+        "grams": 150
+      },
+      "energy_kcal": 105,
+      "carbohydrate_g": 19.5,
+      "protein_g": 3.5,
+      "fat_g": 1.2
+    },
+    {
+      "id": "rambutan",
+      "name": "Rambutan",
+      "local_name": "Rambutan",
+      "description": "Rambutan flesh",
+      "category": "fruit",
+      "serving": {
+        "label": "10 fruits",
+        "local_label": "10 biji",
+        "grams": 100
+      },
+      "energy_kcal": 85,
+      "carbohydrate_g": 20,
+      "protein_g": 0.7,
+      "fat_g": 0.2
+    }
+  ],
+  "addons": [
+    {
+      "id": "ayam_goreng",
+      "name": "Ayam goreng",
+      "description": "Fried chicken, 1 piece",
+      "energy_kcal": 290,
+      "carbohydrate_g": 8,
+      "protein_g": 22,
+      "fat_g": 19
+    },
+    {
+      "id": "telur_mata",
+      "name": "Telur mata",
+      "description": "Fried egg",
+      "energy_kcal": 90,
+      "carbohydrate_g": 0.4,
+      "protein_g": 6.3,
+      "fat_g": 7
+    },
+    {
+      "id": "telur_rebus",
+      "name": "Telur rebus",
+      "description": "Boiled egg",
+      "energy_kcal": 70,
+      "carbohydrate_g": 0.5,
+      "protein_g": 6.3,
+      "fat_g": 4.8
+    },
+    {
+      "id": "rendang_ayam",
+      "name": "Rendang ayam",
+      "description": "Chicken rendang, 1 piece",
+      "energy_kcal": 230,
+      "carbohydrate_g": 5,
+      "protein_g": 18,
+      "fat_g": 15.5
+    },
+    {
+      "id": "sotong_sambal",
+      "name": "Sambal sotong",
+      "description": "Squid in sambal",
+      "energy_kcal": 120,
+      "carbohydrate_g": 6,
+      "protein_g": 10,
+      "fat_g": 6.5
+    },
+    {
+      "id": "sambal",
+      "name": "Sambal",
+      "description": "Extra sambal, 1 tbsp",
+      "energy_kcal": 45,
+      "carbohydrate_g": 3,
+      "protein_g": 0.5,
       "fat_g": 3.5
+    },
+    {
+      "id": "nasi_tambah",
+      "name": "Nasi tambah",
+      "description": "Extra rice, half plate",
+      "energy_kcal": 130,
+      "carbohydrate_g": 29,
+      "protein_g": 2.7,
+      "fat_g": 0.3
+    },
+    {
+      "id": "kuah_dhal",
+      "name": "Kuah dhal",
+      "description": "Dhal curry, 1 ladle",
+      "energy_kcal": 70,
+      "carbohydrate_g": 8,
+      "protein_g": 3,
+      "fat_g": 3
+    },
+    {
+      "id": "kuah_kari",
+      "name": "Kuah kari",
+      "description": "Curry gravy, 1 ladle",
+      "energy_kcal": 90,
+      "carbohydrate_g": 4,
+      "protein_g": 1.5,
+      "fat_g": 7.5
+    },
+    {
+      "id": "ayam_tambah",
+      "name": "Ayam tambah",
+      "description": "Extra chicken",
+      "energy_kcal": 160,
+      "carbohydrate_g": 0,
+      "protein_g": 18,
+      "fat_g": 10
+    },
+    {
+      "id": "sayur",
+      "name": "Sayur",
+      "description": "Side of vegetables",
+      "energy_kcal": 50,
+      "carbohydrate_g": 4,
+      "protein_g": 1.5,
+      "fat_g": 3
+    },
+    {
+      "id": "ketupat",
+      "name": "Ketupat",
+      "description": "Compressed rice, 4 pieces",
+      "energy_kcal": 140,
+      "carbohydrate_g": 31,
+      "protein_g": 2.5,
+      "fat_g": 0.4
+    },
+    {
+      "id": "kuah_kacang",
+      "name": "Kuah kacang",
+      "description": "Extra peanut sauce, 2 tbsp",
+      "energy_kcal": 100,
+      "carbohydrate_g": 7,
+      "protein_g": 3,
+      "fat_g": 6.5
     }
   ]
 }

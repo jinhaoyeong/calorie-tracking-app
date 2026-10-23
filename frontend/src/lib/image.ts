@@ -31,7 +31,7 @@ export async function validateImageFile(file: File): Promise<FileCheck> {
  * Re-encodes large photos to at most UPLOAD_MAX_SIDE px as JPEG. Browsers apply EXIF
  * rotation when decoding, and re-encoding drops the remaining metadata such as location.
  */
-export async function prepareUpload(file: File): Promise<Blob> {
+export async function prepareUpload(file: Blob): Promise<Blob> {
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
@@ -53,4 +53,26 @@ export async function prepareUpload(file: File): Promise<Blob> {
   bitmap.close();
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
   return blob ?? file;
+}
+
+/** Square, centre-cropped JPEG thumbnail for the diary. Small enough to keep many on the device. */
+export async function makeThumbnail(file: Blob, size = 160): Promise<string | undefined> {
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    return undefined;
+  }
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d');
+  if (!context) {
+    bitmap.close();
+    return undefined;
+  }
+  context.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
+  bitmap.close();
+  return canvas.toDataURL('image/jpeg', 0.72);
 }

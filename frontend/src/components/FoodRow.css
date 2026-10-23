@@ -1,0 +1,70 @@
+.food-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 14px 10px 12px;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.list > li + li .food-row {
+  border-top: 1px solid var(--line);
+}
+
+.food-row:active {
+  background: var(--surface-2);
+}
+
+.food-row__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.food-row__name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.food-row__scan {
+  flex: none;
+  color: var(--accent-strong);
+}
+
+.food-row__meta {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  color: var(--ink-3);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.food-row__kcal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.food-row__kcal small {
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.food-row__chevron {
+  flex: none;
+  color: var(--ink-3);
+}

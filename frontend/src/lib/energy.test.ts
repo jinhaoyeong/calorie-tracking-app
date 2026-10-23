@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { calculateTarget, isCompleteProfile, macroTargets, restingEnergy, validateProfile } from './energy';
+import { bmi, bmiBand, calculateTarget, isCompleteProfile, macroTargets, restingEnergy, validateProfile } from './energy';
 import type { Profile } from './types';
 
 const male: Profile = {
+  name: 'Hafiz',
   sex: 'male',
   age: 30,
   heightCm: 180,
@@ -73,6 +74,21 @@ describe('macroTargets', () => {
   });
 });
 
+describe('BMI with Asian cut-offs', () => {
+  it('calculates kg/m²', () => {
+    expect(bmi(165, 58)).toBe(21.3);
+    expect(bmi(180, 80)).toBe(24.7);
+  });
+
+  it('uses the Malaysian CPG bands', () => {
+    expect(bmiBand(18.4).band).toBe('underweight');
+    expect(bmiBand(22.9).band).toBe('healthy');
+    expect(bmiBand(23).band).toBe('overweight');
+    expect(bmiBand(27.4).band).toBe('overweight');
+    expect(bmiBand(27.5).band).toBe('obese');
+  });
+});
+
 describe('validateProfile', () => {
   it('accepts a complete adult profile', () => {
     expect(validateProfile(male)).toEqual({});
@@ -89,6 +105,11 @@ describe('validateProfile', () => {
     expect(Object.keys(validateProfile({})).sort()).toEqual(
       ['activity', 'age', 'goal', 'heightCm', 'sex', 'weightKg'].sort(),
     );
+  });
+
+  it('allows an empty name but not a very long one', () => {
+    expect(isCompleteProfile({ ...male, name: '' })).toBe(true);
+    expect(validateProfile({ ...male, name: 'x'.repeat(31) }).name).toBeDefined();
   });
 
   it('rejects implausible measurements', () => {

@@ -1,19 +1,12 @@
+import { CaretLeft, CaretRight, Camera } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from '../components/Icon';
-import { MacroDot, MACRO_LABEL, type Macro } from '../components/MacroMeter';
-import {
-  addDays,
-  formatDayMonth,
-  formatShortWeekday,
-  formatWeekRange,
-  startOfWeek,
-  todayKey,
-  weekDays,
-} from '../lib/date';
-import { entriesOn, sumNutrients } from '../lib/diary';
+import { FoodArt } from '../art/FoodArt';
+import { MACRO_LABEL, MacroDot, type Macro } from '../components/MacroMeter';
+import { addDays, formatDayMonth, formatShortWeekday, formatWeekRange, startOfWeek, todayKey, weekDays } from '../lib/date';
+import { entriesOn, loggingStreak, sumNutrients } from '../lib/diary';
 import { formatCompact, formatGrams, formatKcal, formatSigned } from '../lib/format';
-import type { DiaryEntry, Nutrients } from '../lib/types';
+import type { DiaryEntry, FoodCategory, Nutrients } from '../lib/types';
 import { useProfile } from '../state/AppState';
 import './Progress.css';
 
@@ -35,18 +28,19 @@ export function Progress() {
   });
   const logged = days.filter((d) => d.logged);
   const weekEntries = entries.filter((e) => e.date >= weekStart && e.date <= addDays(weekStart, 6));
-  const average = logged.length
-    ? Math.round(logged.reduce((sum, d) => sum + d.totals.energyKcal, 0) / logged.length)
-    : 0;
+  const average = logged.length ? Math.round(logged.reduce((sum, d) => sum + d.totals.energyKcal, 0) / logged.length) : 0;
   const pastDays = days.filter((d) => d.date <= today).length;
+  const onTarget = logged.filter((d) => d.totals.energyKcal <= target.targetKcal).length;
 
   return (
     <main className="screen progress">
-      <h1 className="page-title">Progress</h1>
+      <div className="page-head">
+        <h1 className="page-title">Progress</h1>
+      </div>
 
       <div className="week-switch">
-        <button type="button" className="icon-button" onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
-          <Icon name="chevronLeft" />
+        <button type="button" className="round-button" onClick={() => setWeekStart(addDays(weekStart, -7))} aria-label="Previous week">
+          <CaretLeft size={18} weight="bold" />
         </button>
         <div className="week-switch__label">
           <strong>{weekStart === thisWeek ? 'This week' : weekStart === addDays(thisWeek, -7) ? 'Last week' : 'Week of'}</strong>
@@ -54,35 +48,45 @@ export function Progress() {
         </div>
         <button
           type="button"
-          className="icon-button"
+          className="round-button"
           onClick={() => setWeekStart(addDays(weekStart, 7))}
           disabled={weekStart >= thisWeek}
           aria-label="Next week"
         >
-          <Icon name="chevronRight" />
+          <CaretRight size={18} weight="bold" />
         </button>
       </div>
 
       <div className="stats">
         <div className="stat">
           <span className="stat__label">Daily average</span>
-          <span className="stat__value">{logged.length ? formatKcal(average) : '–'}</span>
+          <span className="stat__value num">{logged.length ? formatKcal(average) : '–'}</span>
           <span className="stat__unit">kcal on logged days</span>
         </div>
         <div className="stat">
           <span className="stat__label">Vs target</span>
-          <span className="stat__value">{logged.length ? formatSigned(average - target.targetKcal) : '–'}</span>
-          <span className="stat__unit">kcal per day</span>
+          <span className={`stat__value num${average > target.targetKcal ? ' stat__value--over' : ''}`}>
+            {logged.length ? formatSigned(average - target.targetKcal) : '–'}
+          </span>
+          <span className="stat__unit">kcal a day</span>
         </div>
         <div className="stat">
-          <span className="stat__label">Days logged</span>
-          <span className="stat__value">{logged.length}</span>
-          <span className="stat__unit">of {pastDays}</span>
+          <span className="stat__label">Within target</span>
+          <span className="stat__value num">
+            {onTarget}
+            <small>/{pastDays}</small>
+          </span>
+          <span className="stat__unit">days</span>
+        </div>
+        <div className="stat">
+          <span className="stat__label">Streak</span>
+          <span className="stat__value num">{loggingStreak(entries, today)}</span>
+          <span className="stat__unit">days in a row</span>
         </div>
       </div>
 
-      <section className="card card__pad" aria-labelledby="daily-title">
-        <h2 id="daily-title" className="progress__card-title">
+      <section className="card card--pad" aria-labelledby="daily-title">
+        <h2 id="daily-title" className="progress__title">
           Daily calories
         </h2>
         {logged.length ? (
@@ -90,8 +94,8 @@ export function Progress() {
         ) : (
           <div className="progress__empty">
             <p>No meals logged this week.</p>
-            <Link className="text-button" to="/scan">
-              <Icon name="camera" size={18} /> Scan your next meal
+            <Link className="btn btn--primary" to="/scan">
+              <Camera size={20} weight="fill" /> Scan your next meal
             </Link>
           </div>
         )}
@@ -100,14 +104,14 @@ export function Progress() {
       {logged.length > 0 && (
         <>
           <MacroSplit days={logged} />
-          <TopDishes entries={weekEntries} />
+          <TopFoods entries={weekEntries} />
         </>
       )}
     </main>
   );
 }
 
-const CHART = { width: 340, height: 196, left: 38, right: 10, top: 16, bottom: 26 };
+const CHART = { width: 340, height: 200, left: 36, right: 8, top: 16, bottom: 26 };
 
 function niceScale(max: number): { top: number; step: number } {
   const step = max <= 2400 ? 500 : 1000;
@@ -115,7 +119,7 @@ function niceScale(max: number): { top: number; step: number } {
 }
 
 function columnPath(x: number, y: number, width: number, height: number): string {
-  const r = Math.min(4, height, width / 2);
+  const r = Math.min(6, height, width / 2);
   const base = y + height;
   return `M${x},${base}V${y + r}Q${x},${y} ${x + r},${y}H${x + width - r}Q${x + width},${y} ${x + width},${y + r}V${base}Z`;
 }
@@ -166,12 +170,7 @@ function WeekChart({ days, targetKcal, today }: { days: Day[]; targetKcal: numbe
                     d={columnPath(cx - barWidth / 2, y(kcal), barWidth, y(0) - y(kcal))}
                   />
                 )}
-                <text
-                  className={`chart__day${day.date === today ? ' chart__day--today' : ''}`}
-                  x={cx}
-                  y={CHART.height - 6}
-                  textAnchor="middle"
-                >
+                <text className={`chart__day${day.date === today ? ' chart__day--today' : ''}`} x={cx} y={CHART.height - 6} textAnchor="middle">
                   {formatShortWeekday(day.date)}
                 </text>
                 <rect
@@ -181,9 +180,7 @@ function WeekChart({ days, targetKcal, today }: { days: Day[]; targetKcal: numbe
                   width={band}
                   height={plotHeight}
                   tabIndex={0}
-                  aria-label={`${formatShortWeekday(day.date)} ${formatDayMonth(day.date)}: ${
-                    day.logged ? `${formatKcal(kcal)} kcal` : 'nothing logged'
-                  }`}
+                  aria-label={`${formatShortWeekday(day.date)} ${formatDayMonth(day.date)}: ${day.logged ? `${formatKcal(kcal)} kcal` : 'nothing logged'}`}
                   onPointerEnter={() => setActive(i)}
                   onClick={() => setActive(active === i ? null : i)}
                   onFocus={() => setActive(i)}
@@ -209,8 +206,7 @@ function WeekChart({ days, targetKcal, today }: { days: Day[]; targetKcal: numbe
             </strong>
             {activeDay.logged ? (
               <span className="num">
-                {formatKcal(activeDay.totals.energyKcal)} kcal ·{' '}
-                {Math.round((activeDay.totals.energyKcal / targetKcal) * 100)}% of target
+                {formatKcal(activeDay.totals.energyKcal)} kcal · {Math.round((activeDay.totals.energyKcal / targetKcal) * 100)}% of target
               </span>
             ) : (
               <span>Nothing logged</span>
@@ -249,64 +245,69 @@ function WeekChart({ days, targetKcal, today }: { days: Day[]; targetKcal: numbe
 
 function MacroSplit({ days }: { days: Day[] }) {
   const totals = sumNutrients(days.map((d) => d.totals));
-  const kcal: Record<Macro, number> = {
-    carbs: totals.carbohydrateG * 4,
-    protein: totals.proteinG * 4,
-    fat: totals.fatG * 9,
-  };
+  const kcal: Record<Macro, number> = { carbs: totals.carbohydrateG * 4, protein: totals.proteinG * 4, fat: totals.fatG * 9 };
   const grams: Record<Macro, number> = { carbs: totals.carbohydrateG, protein: totals.proteinG, fat: totals.fatG };
   const sum = kcal.carbs + kcal.protein + kcal.fat;
   const macros: Macro[] = ['carbs', 'protein', 'fat'];
 
   return (
-    <section className="card card__pad progress__macros" aria-labelledby="split-title">
-      <h2 id="split-title" className="progress__card-title">
+    <section className="card card--pad progress__card" aria-labelledby="split-title">
+      <h2 id="split-title" className="progress__title">
         Where your calories came from
       </h2>
-      <div className="split" aria-hidden="true">
-        {macros.map((macro) => (
-          <span key={macro} className={`split__part split__part--${macro}`} style={{ flexGrow: kcal[macro] }} />
-        ))}
-      </div>
-      <ul className="split__legend">
-        {macros.map((macro) => (
-          <li key={macro}>
-            <MacroDot macro={macro} />
-            <span className="split__name">{MACRO_LABEL[macro]}</span>
-            <strong className="num">{sum ? Math.round((kcal[macro] / sum) * 100) : 0}%</strong>
-            <span className="split__grams num">{formatGrams(grams[macro] / days.length)} a day</span>
-          </li>
-        ))}
-      </ul>
+      {sum > 0 ? (
+        <>
+          <div className="split" aria-hidden="true">
+            {macros.map((macro) => (
+              <span key={macro} className={`split__part split__part--${macro}`} style={{ flexGrow: kcal[macro] }} />
+            ))}
+          </div>
+          <ul className="split__legend">
+            {macros.map((macro) => (
+              <li key={macro}>
+                <MacroDot macro={macro} />
+                <span className="split__name">{MACRO_LABEL[macro]}</span>
+                <strong className="num">{Math.round((kcal[macro] / sum) * 100)}%</strong>
+                <span className="split__grams num">{formatGrams(grams[macro] / days.length)} a day</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p className="progress__note">Only quick-add calories were logged, so there’s no macro breakdown.</p>
+      )}
     </section>
   );
 }
 
-function TopDishes({ entries }: { entries: DiaryEntry[] }) {
-  const byFood = new Map<string, { name: string; count: number; kcal: number }>();
+function TopFoods({ entries }: { entries: DiaryEntry[] }) {
+  const byFood = new Map<string, { id: string; name: string; category: FoodCategory; count: number; kcal: number }>();
   for (const entry of entries) {
-    const item = byFood.get(entry.foodId) ?? { name: entry.foodName, count: 0, kcal: 0 };
+    if (entry.source === 'quick') continue;
+    const item = byFood.get(entry.foodId) ?? { id: entry.foodId, name: entry.foodName, category: entry.category, count: 0, kcal: 0 };
     item.count += 1;
     item.kcal += entry.energyKcal;
     byFood.set(entry.foodId, item);
   }
-  const top = [...byFood.values()].sort((a, b) => b.count - a.count || b.kcal - a.kcal).slice(0, 3);
+  const top = [...byFood.values()].sort((a, b) => b.count - a.count || b.kcal - a.kcal).slice(0, 4);
+  if (!top.length) return null;
 
   return (
-    <section className="card progress__dishes" aria-labelledby="top-title">
-      <h2 id="top-title" className="progress__card-title">
+    <section className="card progress__card" aria-labelledby="top-title">
+      <h2 id="top-title" className="progress__title progress__title--padded">
         Most logged this week
       </h2>
-      <ol className="rows">
+      <ol className="list">
         {top.map((item) => (
-          <li key={item.name} className="row">
-            <span>
-              <span className="progress__dish-name">{item.name}</span>
-              <span className="progress__dish-count">
+          <li key={item.id} className="list-row">
+            <FoodArt foodId={item.id} category={item.category} size={44} />
+            <span className="list-row__text">
+              <span className="list-row__title">{item.name}</span>
+              <span className="list-row__sub">
                 {item.count} {item.count === 1 ? 'time' : 'times'}
               </span>
             </span>
-            <span className="row__value num">{formatKcal(item.kcal)} kcal</span>
+            <span className="list-row__value num">{formatKcal(item.kcal)} kcal</span>
           </li>
         ))}
       </ol>

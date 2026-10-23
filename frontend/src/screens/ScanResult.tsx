@@ -1,84 +1,90 @@
+import { ArrowsClockwise, CaretLeft, Check, Cpu, Info, MagnifyingGlass, Warning } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { FoodArt } from '../art/FoodArt';
 import { BottomSheet } from '../components/BottomSheet';
-import { DishRowContent } from '../components/DishRow';
-import { FoodGlyph } from '../components/FoodGlyph';
-import { Icon } from '../components/Icon';
-import { LogFoodForm } from '../components/LogFoodForm';
+import { FoodRowContent } from '../components/FoodRow';
+import { LogFood } from '../components/LogFood';
 import type { PredictResult } from '../lib/api';
-import { FOODS, findFood } from '../lib/foods';
-import { formatPercent } from '../lib/format';
+import { findFood, isVisible, searchFoods } from '../lib/foods';
+import { formatConfidence } from '../lib/format';
 import type { MealType } from '../lib/types';
+import { useApp } from '../state/AppState';
 import './ScanResult.css';
 
 interface Props {
   photoUrl: string;
+  photo: Blob;
   result: PredictResult;
   date: string;
   meal: MealType;
   onRetake: () => void;
 }
 
-export function ScanResult({ photoUrl, result, date, meal, onRetake }: Props) {
+export function ScanResult({ photoUrl, photo, result, date, meal, onRetake }: Props) {
+  const { allFoods, customFoods, preferences } = useApp();
   const top = result.predictions[0];
   const [selectedId, setSelectedId] = useState(top.foodId);
   const [picking, setPicking] = useState(false);
+  const [query, setQuery] = useState('');
 
-  const food = findFood(selectedId);
+  const food = findFood(selectedId, customFoods);
   const prediction = result.predictions.find((p) => p.foodId === selectedId);
   const name = food?.name ?? prediction?.name ?? selectedId;
   const isTop = selectedId === top.foodId;
   const demo = result.model.mode === 'demo';
   const alternatives = result.predictions.filter((p) => p.foodId !== selectedId);
   const lowConfidence = prediction !== undefined && prediction.confidence < result.confidenceThreshold;
+  const percent = prediction ? Math.round(prediction.confidence * 100) : 0;
+  const pickable = searchFoods(query, allFoods.filter((f) => isVisible(f, preferences.halalOnly)));
 
   return (
     <main className={`screen ${food ? 'screen--cta' : 'screen--plain'} result`}>
-      <div className="topbar">
-        <button type="button" className="icon-button" onClick={onRetake} aria-label="Retake photo">
-          <Icon name="chevronLeft" />
-        </button>
-        <span className="topbar__title">Scan result</span>
-        <button type="button" className="icon-button" onClick={onRetake} aria-label="Scan another photo">
-          <Icon name="retake" size={21} />
-        </button>
+      <div className="result__hero">
+        <img src={photoUrl} alt="Your photo" />
+        <div className="result__bar">
+          <button type="button" className="result__round" onClick={onRetake} aria-label="Back to camera">
+            <CaretLeft size={20} weight="bold" />
+          </button>
+          <button type="button" className="result__round" onClick={onRetake} aria-label="Scan another photo">
+            <ArrowsClockwise size={20} weight="bold" />
+          </button>
+        </div>
+        <span className="result__model">
+          <Cpu size={14} weight="bold" />
+          {demo ? 'Demo classifier' : result.model.name} · {Math.round(result.inferenceMs)} ms
+        </span>
       </div>
 
-      <figure className="result__photo">
-        <img src={photoUrl} alt="Your photo" />
-        <figcaption className="result__model">
-          <Icon name="chip" size={14} />
-          {demo ? 'Demo classifier' : result.model.name} · {Math.round(result.inferenceMs)} ms
-        </figcaption>
-      </figure>
+      <div className="result__sheet">
+        {demo && (
+          <p className="notice notice--warning result__demo">
+            <Info size={18} weight="fill" />
+            <span>
+              <strong>Demo mode.</strong> No trained model is connected yet, so this suggestion is a placeholder. Check the
+              dish before adding it.
+            </span>
+          </p>
+        )}
 
-      {demo && (
-        <p className="note note--warning result__demo">
-          <Icon name="info" size={18} />
-          <span>
-            <strong>Demo mode.</strong> No trained model is connected yet, so this suggestion is a placeholder. Check the
-            dish yourself before adding it.
-          </span>
-        </p>
-      )}
-
-      <section className="card card__pad result__match" aria-labelledby="match-name">
-        <p className="result__eyebrow">{isTop ? 'Best match' : 'Your choice'}</p>
-        <div className="result__dish">
-          {food && <FoodGlyph category={food.category} size={48} />}
-          <div>
-            <h1 id="match-name" className="result__name">
-              {name}
-            </h1>
-            {food && <p className="result__local">{food.localName}</p>}
+        <div className="result__match">
+          {food && <FoodArt foodId={food.id} category={food.category} size={64} />}
+          <div className="result__titles">
+            <p className="result__eyebrow">{isTop ? 'Best match' : 'Your choice'}</p>
+            <h1 className="result__name">{name}</h1>
+            {food?.localName && food.localName !== food.name && <p className="result__local">{food.localName}</p>}
           </div>
         </div>
-        {food && <p className="result__description">{food.description}</p>}
 
         {prediction ? (
           <div className={`confidence${lowConfidence ? ' confidence--low' : ''}`}>
-            <div className="confidence__label">
-              <span>Model confidence</span>
-              <strong className="num">{formatPercent(prediction.confidence)}</strong>
+            <div className="confidence__head">
+              <span className="confidence__pill num">
+                {lowConfidence ? <Warning size={14} weight="fill" /> : <Check size={14} weight="bold" />}
+                {percent}% match
+              </span>
+              <span className="confidence__note">
+                {lowConfidence ? 'Low confidence, please check' : 'Model confidence'}
+              </span>
             </div>
             <div
               className="confidence__track"
@@ -86,83 +92,76 @@ export function ScanResult({ photoUrl, result, date, meal, onRetake }: Props) {
               aria-label="Model confidence"
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-valuenow={Math.round(prediction.confidence * 100)}
+              aria-valuenow={percent}
             >
-              <span className="confidence__fill" style={{ width: `${prediction.confidence * 100}%` }} />
-              <span
-                className="confidence__threshold"
-                style={{ left: `${result.confidenceThreshold * 100}%` }}
-                title={`Low-confidence threshold ${formatPercent(result.confidenceThreshold)}`}
-              />
+              <span className="confidence__fill" style={{ width: `${percent}%` }} />
+              <span className="confidence__threshold" style={{ left: `${result.confidenceThreshold * 100}%` }} />
             </div>
+            {lowConfidence && (
+              <p className="confidence__help">
+                The photo may show a different dish, or one the camera doesn’t know yet. Pick the right one below if needed.
+              </p>
+            )}
           </div>
         ) : (
-          <p className="result__manual">Chosen by you from the dish list</p>
+          <p className="result__manual">Chosen by you</p>
         )}
 
-        {lowConfidence && (
-          <p className="note note--warning result__low">
-            <Icon name="alert" size={18} />
-            <span>
-              <strong>Low confidence.</strong> The photo may show a different dish, or one the app doesn’t recognise yet.
-              Check it before adding.
-            </span>
-          </p>
-        )}
-
-        <div className="result__alternatives">
-          <p>Not right? Choose another</p>
-          <ul>
-            {alternatives.map((alt) => (
-              <li key={alt.foodId}>
-                <button type="button" className="chip" onClick={() => setSelectedId(alt.foodId)}>
-                  {alt.name} <span className="num">{formatPercent(alt.confidence)}</span>
+        <div className="result__alts">
+          <p className="result__alts-title">Not right?</p>
+          <div className="chips chips--scroll">
+            {alternatives.map((alt) => {
+              const altFood = findFood(alt.foodId);
+              return (
+                <button key={alt.foodId} type="button" className="chip result__alt" onClick={() => setSelectedId(alt.foodId)}>
+                  {altFood && <FoodArt foodId={altFood.id} category={altFood.category} size={26} />}
+                  {alt.name}
+                  <span className="chip__meta num">{formatConfidence(alt.confidence)}</span>
                 </button>
-              </li>
-            ))}
-            <li>
-              <button type="button" className="chip chip--outline" onClick={() => setPicking(true)}>
-                All dishes
-              </button>
-            </li>
-          </ul>
+              );
+            })}
+            <button type="button" className="chip" onClick={() => setPicking(true)}>
+              <MagnifyingGlass size={16} weight="bold" /> Other food
+            </button>
+          </div>
         </div>
-      </section>
 
-      {food ? (
-        <LogFoodForm food={food} date={date} initialMeal={meal} source="scan" confidence={prediction?.confidence} />
-      ) : (
-        <div className="note note--danger result__missing" role="alert">
-          <Icon name="alert" size={20} />
-          <span>
-            <strong>No nutrition data for {name}.</strong> This dish isn’t in the nutrition table yet, so it can’t be
-            added. Choose the dish from the list instead.
-          </span>
-        </div>
-      )}
+        {food ? (
+          <div className="result__log">
+            <LogFood food={food} date={date} initialMeal={meal} source="scan" confidence={prediction?.confidence} photo={photo} />
+          </div>
+        ) : (
+          <div className="notice notice--danger result__missing" role="alert">
+            <Warning size={20} weight="fill" />
+            <span>
+              <strong>No nutrition data for {name}.</strong> This dish isn’t in the nutrition table yet, so it can’t be added.
+              Choose another food instead.
+            </span>
+          </div>
+        )}
+      </div>
 
       {picking && (
-        <BottomSheet title="Choose the dish" onClose={() => setPicking(false)}>
-          <ul className="dish-list">
-            {FOODS.map((option) => (
+        <BottomSheet title="Choose the food" onClose={() => setPicking(false)}>
+          <label className="search result__search">
+            <MagnifyingGlass size={20} weight="bold" />
+            <span className="visually-hidden">Search foods</span>
+            <input type="search" placeholder="Cari makanan…" value={query} onChange={(e) => setQuery(e.target.value)} />
+          </label>
+          <ul className="list">
+            {pickable.map((option) => (
               <li key={option.id}>
                 <button
                   type="button"
-                  className="dish-row"
+                  className="food-row"
                   onClick={() => {
                     setSelectedId(option.id);
                     setPicking(false);
                   }}
                 >
-                  <DishRowContent
+                  <FoodRowContent
                     food={option}
-                    trailing={
-                      option.id === selectedId ? (
-                        <Icon name="check" size={20} className="dish-row__selected" />
-                      ) : (
-                        <span className="dish-row__spacer" />
-                      )
-                    }
+                    trailing={option.id === selectedId ? <Check size={20} weight="bold" className="result__picked" /> : <span className="result__spacer" />}
                   />
                 </button>
               </li>

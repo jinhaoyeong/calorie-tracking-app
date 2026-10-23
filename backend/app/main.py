@@ -34,7 +34,7 @@ def create_app(
 ) -> FastAPI:
     settings = settings or load_settings()
     nutrition = nutrition or NutritionDatabase.from_file(settings.foods_path)
-    classifier = classifier or load_classifier(settings.model_dir, nutrition.ids)
+    classifier = classifier or load_classifier(settings.model_dir, nutrition.scan_ids)
 
     app = FastAPI(title="Pinggan API", version="0.1.0")
     if settings.cors_origins:

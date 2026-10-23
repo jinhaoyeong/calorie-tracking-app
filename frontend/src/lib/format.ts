@@ -13,6 +13,12 @@ export function formatPercent(fraction: number): string {
   return `${Math.round(fraction * 100)}%`;
 }
 
+/** Model confidence as a whole percent; scores that round to zero show as "<1%". */
+export function formatConfidence(fraction: number): string {
+  const percent = Math.round(fraction * 100);
+  return percent === 0 && fraction > 0 ? '<1%' : `${percent}%`;
+}
+
 export function formatSigned(value: number): string {
   if (value === 0) return '0';
   return `${value > 0 ? '+' : '−'}${integer.format(Math.abs(Math.round(value)))}`;

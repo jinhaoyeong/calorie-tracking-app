@@ -1,5 +1,5 @@
+import { Warning } from '@phosphor-icons/react';
 import { formatGrams } from '../lib/format';
-import { Icon } from './Icon';
 import './MacroMeter.css';
 
 export type Macro = 'carbs' | 'protein' | 'fat';
@@ -12,16 +12,22 @@ interface Props {
   targetGrams: number;
 }
 
+/** Macro progress on the dark summary card. */
 export function MacroMeter({ macro, grams, targetGrams }: Props) {
   const fraction = targetGrams > 0 ? Math.min(grams / targetGrams, 1) : 0;
   const over = grams > targetGrams;
   return (
     <div className={`macro macro--${macro}${over ? ' macro--over' : ''}`}>
       <div className="macro__label">{MACRO_LABEL[macro]}</div>
+      <div className="macro__value num">
+        {over && <Warning size={13} weight="bold" className="macro__over-icon" />}
+        <strong>{Math.round(grams)}</strong>
+        <span>/{Math.round(targetGrams)}g</span>
+      </div>
       <div
         className="macro__track"
         role="meter"
-        aria-label={`${MACRO_LABEL[macro]}`}
+        aria-label={MACRO_LABEL[macro]}
         aria-valuemin={0}
         aria-valuemax={targetGrams}
         aria-valuenow={Math.min(grams, targetGrams)}
@@ -29,16 +35,11 @@ export function MacroMeter({ macro, grams, targetGrams }: Props) {
       >
         <div className="macro__fill" style={{ width: `${fraction * 100}%` }} />
       </div>
-      <div className="macro__value num">
-        {over && <Icon name="alert" size={13} strokeWidth={2} className="macro__over-icon" />}
-        <strong>{Math.round(grams)}</strong>
-        <span> / {Math.round(targetGrams)} g</span>
-      </div>
     </div>
   );
 }
 
-/** Small coloured key used next to gram values. */
+/** Small coloured key used next to gram values on light surfaces. */
 export function MacroDot({ macro }: { macro: Macro }) {
   return <span className={`macro-dot macro-dot--${macro}`} aria-hidden="true" />;
 }

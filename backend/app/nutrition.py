@@ -13,6 +13,8 @@ class NutritionDatabase:
         self.basis: str = payload["basis"]
         self.source_url: str = payload.get("source_url", "")
         self._foods: dict[str, dict[str, Any]] = {f["id"]: f for f in payload["foods"]}
+        self.categories: list[dict[str, Any]] = payload.get("categories", [])
+        self.addons: list[dict[str, Any]] = payload.get("addons", [])
 
     @classmethod
     def from_file(cls, path: Path) -> "NutritionDatabase":
@@ -32,10 +34,17 @@ class NutritionDatabase:
     def ids(self) -> list[str]:
         return list(self._foods)
 
+    @property
+    def scan_ids(self) -> list[str]:
+        """The classes the recognition model is trained on (the ten proposal dishes)."""
+        return [food_id for food_id, food in self._foods.items() if food.get("scan")]
+
     def as_dict(self) -> dict[str, Any]:
         return {
             "version": self.version,
             "basis": self.basis,
             "source_url": self.source_url,
+            "categories": self.categories,
             "foods": list(self._foods.values()),
+            "addons": self.addons,
         }
