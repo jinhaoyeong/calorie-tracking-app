@@ -1,7 +1,7 @@
 import { CameraSlash, Images, MagnifyingGlass, Warning, X } from '@phosphor-icons/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { FoodArt } from '../art/FoodArt';
+import { FoodThumb } from '../components/FoodThumb';
 import { BottomSheet } from '../components/BottomSheet';
 import { ApiError, predictDish, type PredictResult } from '../lib/api';
 import { isDateKey, todayKey } from '../lib/date';
@@ -188,7 +188,7 @@ export function Scan() {
           <button type="button" className="camera__round" onClick={phase.kind === 'camera' ? close : reset} aria-label={phase.kind === 'camera' ? 'Close' : 'Back to camera'}>
             <X size={20} weight="bold" />
           </button>
-          <span className="camera__title">Scan food</span>
+          <span className="camera__title">Scan meal</span>
           <span className="camera__spacer" />
         </div>
 
@@ -212,7 +212,7 @@ export function Scan() {
             <span>{phase.message}</span>
           </div>
           <div className="camera__error-actions">
-            <button type="button" className="btn btn--accent" onClick={reset}>
+            <button type="button" className="btn btn--primary" onClick={reset}>
               Try again
             </button>
             <Link className="btn camera__ghost" to={`/foods${query}`} replace>
@@ -247,12 +247,7 @@ export function Scan() {
             </Link>
           </div>
           <button type="button" className="camera__supported" onClick={() => setShowList(true)}>
-            <span className="camera__faces">
-              {SCAN_FOODS.slice(0, 4).map((food) => (
-                <FoodArt key={food.id} foodId={food.id} category={food.category} size={26} />
-              ))}
-            </span>
-            Recognises {SCAN_FOODS.length} Malaysian dishes
+            Recognises {SCAN_FOODS.length} Malaysian dishes · View list
           </button>
           <p className="camera__privacy">Photos are analysed and then discarded by the server.</p>
         </div>
@@ -264,14 +259,18 @@ export function Scan() {
       {showList && (
         <BottomSheet title="Dishes the camera knows" onClose={() => setShowList(false)}>
           <p className="sheet-lede">For anything else, search all {FOODS.length} foods or use quick add.</p>
-          <div className="scan-list">
+          <ul className="card list">
             {SCAN_FOODS.map((food) => (
-              <div key={food.id} className="scan-list__item">
-                <FoodArt foodId={food.id} category={food.category} size={64} />
-                <span>{food.name}</span>
-              </div>
+              <li key={food.id} className="list-row">
+                <FoodThumb category={food.category} size={36} />
+                <span className="list-row__text">
+                  <span className="list-row__title">{food.name}</span>
+                  <span className="list-row__sub">{food.localName}</span>
+                </span>
+                <span className="list-row__value">{food.energyKcal} kcal</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </BottomSheet>
       )}
     </main>

@@ -9,7 +9,7 @@
 
 .ring__track {
   fill: none;
-  stroke: var(--hero-track);
+  stroke: var(--surface-3);
 }
 
 .ring__value {

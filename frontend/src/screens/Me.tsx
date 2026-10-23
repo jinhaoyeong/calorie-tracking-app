@@ -42,7 +42,7 @@ export function Me() {
             {GOALS[profile.goal].label} · {formatKcal(target.targetKcal)} kcal a day
           </p>
         </div>
-        <Link to="/me/edit" className="round-button" aria-label="Edit profile">
+        <Link to="/me/edit" className="icon-button" aria-label="Edit profile">
           <PencilSimple size={20} weight="bold" />
         </Link>
       </header>
@@ -50,26 +50,26 @@ export function Me() {
       <div className="me__stats">
         <div className="me__stat">
           <span>Age</span>
-          <strong className="num">{profile.age}</strong>
+          <strong className="display">{profile.age}</strong>
           <small>years</small>
         </div>
         <div className="me__stat">
           <span>Height</span>
-          <strong className="num">{profile.heightCm}</strong>
+          <strong className="display">{profile.heightCm}</strong>
           <small>cm</small>
         </div>
         <div className="me__stat">
           <span>Weight</span>
-          <strong className="num">{profile.weightKg}</strong>
+          <strong className="display">{profile.weightKg}</strong>
           <small>kg</small>
         </div>
         <div className={`me__stat me__stat--bmi me__stat--${band.band}`}>
           <span>BMI</span>
-          <strong className="num">{bmiValue}</strong>
+          <strong className="display">{bmiValue}</strong>
           <small>{band.label}</small>
         </div>
       </div>
-      <p className="me__note">BMI uses the Asian cut-offs in Malaysia’s clinical guidelines: healthy is 18.5–22.9.</p>
+      <p className="me__note">BMI uses the Asian cut-offs in Malaysia’s clinical guidelines (healthy 18.5–22.9).</p>
 
       <div className="section-head">
         <h2 className="section-title">Your daily target</h2>
@@ -174,7 +174,7 @@ export function Me() {
 
       <section className="me__about">
         <p>
-          Pinggan is a research prototype for Malaysian food. Targets use the Mifflin–St Jeor equation (Mifflin et al., 1990)
+          Pinggan is a research prototype for Malaysian food and fitness. Targets use the Mifflin–St Jeor equation (Mifflin et al., 1990)
           with an activity multiplier. Nutrition values for the {FOODS.length} foods are per standard serving and will be
           checked against the{' '}
           <a href={NUTRITION_SOURCE_URL} target="_blank" rel="noreferrer">

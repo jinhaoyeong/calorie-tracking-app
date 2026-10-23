@@ -1,73 +1,60 @@
 .macro {
-  --macro: var(--carbs-on-hero);
+  --macro: var(--carbs);
   min-width: 0;
 }
 
 .macro--protein {
-  --macro: var(--protein-on-hero);
+  --macro: var(--protein);
 }
 
 .macro--fat {
-  --macro: var(--fat-on-hero);
+  --macro: var(--fat);
 }
 
 .macro__label {
-  color: var(--on-hero-2);
-  font-size: 12px;
+  color: var(--ink-3);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .macro__value {
-  margin-top: 2px;
-  color: var(--on-hero-2);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+  color: var(--ink-3);
   font-size: 12px;
   font-weight: 600;
 }
 
 .macro__value strong {
-  color: var(--on-hero);
-  font-size: 16px;
-  font-weight: 800;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
 }
 
 .macro--over .macro__value strong,
 .macro__over-icon {
-  color: #ff8b90;
+  color: var(--danger-text);
 }
 
 .macro__over-icon {
-  margin-right: 3px;
-  vertical-align: -1px;
+  align-self: center;
 }
 
 .macro__track {
-  height: 6px;
-  margin-top: 7px;
+  height: 4px;
+  margin-top: 8px;
   overflow: hidden;
-  border-radius: 3px;
-  background: var(--hero-track);
+  border-radius: 2px;
+  background: var(--surface-3);
 }
 
 .macro__fill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 2px;
   background: var(--macro);
   transition: width 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.macro-dot {
-  display: inline-block;
-  flex: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--carbs);
-}
-
-.macro-dot--protein {
-  background: var(--protein);
-}
-
-.macro-dot--fat {
-  background: var(--fat);
 }

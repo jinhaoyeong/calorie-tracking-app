@@ -1,8 +1,8 @@
 .week-switch {
   display: grid;
-  grid-template-columns: 42px 1fr 42px;
+  grid-template-columns: 40px 1fr 40px;
   align-items: center;
-  margin: 10px 0 4px;
+  margin: 14px 0 4px;
 }
 
 .week-switch__label {
@@ -11,51 +11,51 @@
 
 .week-switch__label strong {
   display: block;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .week-switch__label span {
   color: var(--ink-3);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
 }
 
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 14px 0 12px;
+  gap: 8px;
+  margin: 12px 0 10px;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 14px 16px;
-  border-radius: 20px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
 
 .stat__label {
-  color: var(--ink-2);
-  font-size: 13px;
+  color: var(--ink-3);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .stat__value {
-  margin-top: 4px;
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  margin-top: 6px;
+  font-size: 40px;
+  line-height: 0.9;
 }
 
 .stat__value small {
   color: var(--ink-3);
-  font-size: 16px;
-  letter-spacing: 0;
+  font-size: 20px;
 }
 
 .stat__value--over {
@@ -63,23 +63,25 @@
 }
 
 .stat__unit {
+  margin-top: 4px;
   color: var(--ink-3);
   font-size: 12px;
-  font-weight: 600;
 }
 
 .progress__title {
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .progress__title--padded {
-  padding: 18px 18px 4px;
+  padding: 16px 16px 6px;
 }
 
 .progress__card {
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .progress__empty {
@@ -103,8 +105,8 @@
   gap: 4px 14px;
   margin: 10px 0 0;
   padding: 0;
-  color: var(--ink-2);
-  font-size: 12px;
+  color: var(--ink-3);
+  font-size: 11px;
   font-weight: 600;
   list-style: none;
 }
@@ -116,9 +118,9 @@
 }
 
 .chart-legend__swatch {
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
   background: var(--accent);
 }
 
@@ -128,8 +130,8 @@
 
 .chart-legend__line {
   width: 14px;
-  height: 2px;
-  background: var(--ink-2);
+  height: 0;
+  border-top: 1.5px dashed var(--ink-2);
 }
 
 .chart {
@@ -150,26 +152,32 @@
 }
 
 .chart__baseline {
-  stroke: var(--surface-3);
+  stroke: var(--line-strong);
   stroke-width: 1;
 }
 
 .chart__target {
   stroke: var(--ink-2);
   stroke-width: 1.5;
+  stroke-dasharray: 4 4;
 }
 
 .chart__tick,
 .chart__day {
   fill: var(--ink-3);
   font-family: var(--font);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
+  letter-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
 }
 
+.chart__day {
+  text-transform: uppercase;
+}
+
 .chart__day--today {
-  fill: var(--ink);
+  fill: var(--accent);
   font-weight: 800;
 }
 
@@ -183,7 +191,7 @@
 }
 
 .chart__bar--muted {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .chart__hit {
@@ -193,7 +201,7 @@
 }
 
 .chart__hit:focus-visible {
-  stroke: var(--ink);
+  stroke: var(--accent);
   stroke-width: 2;
 }
 
@@ -203,9 +211,9 @@
   display: flex;
   flex-direction: column;
   padding: 8px 11px;
-  border-radius: 12px;
-  background: var(--cta);
-  color: var(--on-cta);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--surface-3);
   box-shadow: var(--shadow-float);
   font-size: 12px;
   white-space: nowrap;
@@ -213,24 +221,29 @@
 }
 
 .chart__tooltip strong {
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .chart__tooltip span {
-  opacity: 0.75;
+  color: var(--ink-2);
 }
 
 .chart-table {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .chart-table summary {
   min-height: 36px;
   padding: 8px 0;
-  color: var(--accent-strong);
-  font-weight: 800;
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -243,18 +256,20 @@
 .chart-table td {
   padding: 8px 0;
   border-top: 1px solid var(--line);
-  font-weight: 700;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
 .chart-table th:first-child {
-  font-weight: 600;
   text-align: left;
 }
 
 .chart-table thead th {
   color: var(--ink-3);
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .chart-table__over {
@@ -263,11 +278,11 @@
 
 .split {
   display: flex;
-  gap: 3px;
-  height: 14px;
+  gap: 2px;
+  height: 10px;
   margin-top: 14px;
   overflow: hidden;
-  border-radius: 7px;
+  border-radius: 3px;
 }
 
 .split__part {
@@ -299,12 +314,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .split__legend strong {
-  font-weight: 800;
+  font-size: 22px;
+  line-height: 1;
 }
 
 .split__name {
@@ -314,6 +330,6 @@
 .split__grams {
   min-width: 96px;
   color: var(--ink-3);
-  font-size: 13px;
+  font-size: 12px;
   text-align: right;
 }

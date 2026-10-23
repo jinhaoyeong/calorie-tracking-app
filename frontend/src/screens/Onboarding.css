@@ -2,28 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  background: var(--canvas);
-}
-
-.welcome__collage {
-  position: relative;
-  flex: 1;
-  min-height: 380px;
-  margin-bottom: -40px;
-  overflow: hidden;
-  background: var(--tile-rice);
-}
-
-.welcome__food {
-  position: absolute;
-  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.12));
-}
-
-.welcome__content {
-  position: relative;
-  padding: 28px var(--gutter) calc(var(--safe-bottom) + 24px);
-  border-radius: 32px 32px 0 0;
-  background: var(--canvas);
+  padding: calc(var(--safe-top) + 18px) var(--gutter) calc(var(--safe-bottom) + 22px);
 }
 
 .welcome__brand {
@@ -31,26 +10,127 @@
   align-items: center;
   gap: 10px;
   font-size: 18px;
+  font-stretch: var(--condensed);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .welcome__brand img {
-  border-radius: 10px;
+  border-radius: 8px;
+}
+
+.welcome__visual {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.welcome__rings {
+  width: min(66vw, 250px);
+  height: auto;
+}
+
+.welcome__legend {
+  position: absolute;
+  right: 0;
+  bottom: 18px;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(19, 21, 24, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.welcome__legend dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.welcome__legend dd {
+  margin: 2px 0 0;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.welcome__key {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.welcome__key--kcal {
+  background: var(--accent);
+}
+
+.welcome__key--protein {
+  background: var(--protein);
+}
+
+.welcome__content {
+  padding-top: 8px;
 }
 
 .welcome__headline {
-  margin-top: 16px;
-  font-size: 36px;
+  margin-top: 10px;
+  font-size: 64px;
+  font-stretch: var(--condensed);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  line-height: 0.88;
+  text-transform: uppercase;
 }
 
 .welcome__lede {
-  margin: 12px 0 24px;
+  margin-top: 14px;
   color: var(--ink-2);
-  font-size: 16px;
+  font-size: 15px;
+}
+
+.welcome__facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 20px 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  list-style: none;
+}
+
+.welcome__facts li {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+
+.welcome__facts li + li {
+  border-left: 1px solid var(--line);
+}
+
+.welcome__facts strong {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.welcome__facts span {
+  margin-top: 4px;
+  color: var(--ink-3);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .welcome__privacy {
@@ -58,51 +138,50 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 14px;
+  margin-top: 12px;
   color: var(--ink-3);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
 }
 
 .onboarding__progress {
-  height: 6px;
+  height: 4px;
   margin: 0 10px;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 2px;
   background: var(--surface-3);
 }
 
 .onboarding__progress span {
   display: block;
   height: 100%;
-  border-radius: 3px;
   background: var(--accent);
   transition: width 300ms ease;
 }
 
 .onboarding__count {
   color: var(--ink-3);
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 700;
   text-align: center;
 }
 
 .onboarding__title {
   margin-top: 18px;
-  font-size: 30px;
+  font-size: 42px;
+  font-stretch: var(--condensed);
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 .onboarding__lede {
-  margin-top: 8px;
+  margin-top: 10px;
   color: var(--ink-2);
   font-size: 15px;
 }
 
 .onboarding__fields {
-  margin-top: 26px;
+  margin-top: 24px;
 }
 
 .onboarding__gap {
@@ -117,39 +196,42 @@
 .onboarding__bmi {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 16px;
   padding: 14px 16px;
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
 
 .onboarding__bmi span {
-  color: var(--ink-2);
-  font-size: 14px;
+  color: var(--ink-3);
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .onboarding__bmi strong {
-  font-size: 22px;
+  font-size: 28px;
+  font-stretch: var(--condensed);
   font-weight: 800;
 }
 
 .onboarding__bmi em {
-  font-size: 14px;
+  font-size: 13px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .onboarding__bmi small {
   margin-left: auto;
   color: var(--ink-3);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .onboarding__bmi--healthy em {
-  color: var(--accent-strong);
+  color: var(--accent-text);
 }
 
 .onboarding__bmi--underweight em,
@@ -162,54 +244,41 @@
 }
 
 .onboarding__result {
-  padding: 18px 0 22px;
-  text-align: center;
-}
-
-.onboarding__result-label {
-  color: var(--ink-2);
-  font-size: 15px;
-  font-weight: 700;
+  padding: 22px 0 20px;
 }
 
 .onboarding__result-value {
-  margin-top: 4px;
-  font-size: 64px;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 1;
+  margin-top: 8px;
+  font-size: 96px;
+  line-height: 0.85;
 }
 
 .onboarding__result-value span {
-  margin-left: 6px;
+  margin-left: 8px;
   color: var(--ink-3);
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
-.onboarding__result-hint {
-  margin-top: 10px;
-  color: var(--ink-3);
-  font-size: 13px;
+  font-size: 16px;
+  font-stretch: 100%;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .onboarding__ack {
   display: flex;
   gap: 12px;
-  margin-top: 14px;
-  padding: 16px;
-  border-radius: var(--radius-md);
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
   color: var(--ink-2);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .onboarding__ack input {
   flex: none;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   margin: 0;
-  accent-color: var(--ink);
+  accent-color: var(--accent);
 }

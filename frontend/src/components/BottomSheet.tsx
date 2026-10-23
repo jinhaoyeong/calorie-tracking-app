@@ -38,7 +38,7 @@ export function BottomSheet({ title, onClose, children, footer }: Props) {
           <h2 id={titleId} className="sheet__title">
             {title}
           </h2>
-          <button type="button" className="round-button round-button--soft" onClick={onClose} aria-label="Close">
+          <button type="button" className="icon-button" onClick={onClose} aria-label="Close">
             <X size={18} weight="bold" />
           </button>
         </div>

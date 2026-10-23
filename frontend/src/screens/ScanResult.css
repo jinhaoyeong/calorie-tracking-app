@@ -1,6 +1,6 @@
 .result__hero {
   position: relative;
-  height: 330px;
+  height: 300px;
   margin: 0 calc(var(--gutter) * -1);
   background: #16181c;
 }
@@ -12,11 +12,20 @@
   object-fit: cover;
 }
 
+.result__hero::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 90px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  content: '';
+}
+
 .result__bar {
   position: absolute;
   top: 0;
   right: 0;
   left: 0;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   padding: calc(var(--safe-top) + 12px) var(--gutter) 0;
@@ -25,47 +34,42 @@
 .result__round {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 0;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.45);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.55);
   color: #fff;
   backdrop-filter: blur(8px);
 }
 
 .result__model {
   position: absolute;
-  bottom: 42px;
+  bottom: 14px;
   left: var(--gutter);
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 6px 11px;
-  border-radius: 999px;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   backdrop-filter: blur(8px);
 }
 
 .result__sheet {
   position: relative;
-  margin: -28px calc(var(--gutter) * -1) 0;
-  padding: 22px var(--gutter) 0;
-  border-radius: 28px 28px 0 0;
-  background: var(--canvas);
+  padding-top: 14px;
 }
 
 .result__demo {
   margin-bottom: 16px;
-}
-
-.result__match {
-  display: flex;
-  align-items: center;
-  gap: 14px;
 }
 
 .result__titles {
@@ -73,20 +77,25 @@
 }
 
 .result__eyebrow {
-  color: var(--accent-strong);
-  font-size: 13px;
-  font-weight: 800;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .result__name {
-  font-size: 28px;
+  margin-top: 6px;
+  font-size: 44px;
+  font-stretch: var(--condensed);
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+  line-height: 0.95;
+  text-transform: uppercase;
 }
 
 .result__local {
-  color: var(--ink-3);
+  margin-top: 6px;
+  color: var(--ink-2);
   font-size: 14px;
   font-weight: 600;
 }
@@ -94,23 +103,21 @@
 .result__manual {
   margin-top: 12px;
   color: var(--ink-3);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .confidence {
   --level: var(--accent);
-  --level-soft: var(--accent-soft);
-  --level-text: var(--accent-strong);
+  --level-text: var(--accent-text);
   margin-top: 16px;
   padding: 14px;
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
 
 .confidence--low {
   --level: var(--warning);
-  --level-soft: var(--warning-soft);
   --level-text: var(--warning-text);
 }
 
@@ -124,33 +131,34 @@
 .confidence__pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  border-radius: 999px;
-  background: var(--level-soft);
+  gap: 6px;
   color: var(--level-text);
-  font-size: 14px;
+  font-size: 26px;
+  font-stretch: var(--condensed);
   font-weight: 800;
+  text-transform: uppercase;
 }
 
 .confidence__note {
   color: var(--ink-3);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .confidence__track {
   position: relative;
-  height: 8px;
+  height: 6px;
   margin-top: 12px;
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--surface-3);
 }
 
 .confidence__fill {
   display: block;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 3px;
   background: var(--level);
 }
 
@@ -160,7 +168,6 @@
   bottom: -4px;
   width: 2px;
   margin-left: -1px;
-  border-radius: 1px;
   background: var(--ink-2);
 }
 
@@ -172,26 +179,20 @@
 }
 
 .result__alts {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .result__alts-title {
-  margin: 0 0 8px 2px;
-  color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.result__alt {
-  padding-left: 6px;
-}
-
-.result__alt .food-art {
-  border-radius: 50%;
+  margin: 0 0 8px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .result__log {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .result__missing {
@@ -204,7 +205,7 @@
 
 .result__picked {
   flex: none;
-  color: var(--accent-strong);
+  color: var(--accent);
 }
 
 .result__spacer {

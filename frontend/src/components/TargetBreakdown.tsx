@@ -1,7 +1,7 @@
 import { ACTIVITY_LEVELS, GOALS, type MacroTargets, type TargetBreakdown as Breakdown } from '../lib/energy';
 import { formatKcal, formatSigned } from '../lib/format';
 import type { Profile } from '../lib/types';
-import { MacroDot } from './MacroMeter';
+import { MacroDot } from './MacroCharts';
 import './TargetBreakdown.css';
 
 interface Props {
@@ -62,7 +62,7 @@ export function TargetBreakdown({ profile, target, macros }: Props) {
             <span className="breakdown__detail">Raised to the {formatKcal(target.minimumKcal)} kcal minimum</span>
           )}
         </div>
-        <span className="breakdown__total-value num">
+        <span className="breakdown__total-value display">
           {formatKcal(target.targetKcal)}
           <small> kcal</small>
         </span>
@@ -70,21 +70,21 @@ export function TargetBreakdown({ profile, target, macros }: Props) {
       <dl className="breakdown__macros">
         <div>
           <dt>
-            <MacroDot macro="carbs" /> Carbs
+            <MacroDot macro="protein" /> Protein
           </dt>
-          <dd className="num">{macros.carbohydrateG} g</dd>
+          <dd className="display">{macros.proteinG} g</dd>
         </div>
         <div>
           <dt>
-            <MacroDot macro="protein" /> Protein
+            <MacroDot macro="carbs" /> Carbs
           </dt>
-          <dd className="num">{macros.proteinG} g</dd>
+          <dd className="display">{macros.carbohydrateG} g</dd>
         </div>
         <div>
           <dt>
             <MacroDot macro="fat" /> Fat
           </dt>
-          <dd className="num">{macros.fatG} g</dd>
+          <dd className="display">{macros.fatG} g</dd>
         </div>
       </dl>
       <p className="breakdown__footnote">

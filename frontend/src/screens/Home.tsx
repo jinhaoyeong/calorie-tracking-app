@@ -16,11 +16,12 @@ import {
 } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { FoodArt } from '../art/FoodArt';
 import { BottomSheet } from '../components/BottomSheet';
 import { CalorieRing } from '../components/CalorieRing';
 import { MealPicker, ServingStepper } from '../components/Controls';
-import { MacroDot, MacroMeter } from '../components/MacroMeter';
+import { FoodThumb } from '../components/FoodThumb';
+import { MacroDot, MACROS } from '../components/MacroCharts';
+import { MacroMeter } from '../components/MacroMeter';
 import { PlateGuide } from '../components/PlateGuide';
 import { QuickAddSheet } from '../components/QuickAddSheet';
 import { WeekStrip } from '../components/WeekStrip';
@@ -73,6 +74,7 @@ export function Home() {
   const meals = byMeal(dayEntries);
   const remaining = target.targetKcal - totals.energyKcal;
   const over = remaining < 0;
+  const percent = Math.round((totals.energyKcal / target.targetKcal) * 100);
   const streak = loggingStreak(entries, today);
   const suggested = date === today ? suggestedMeal() : 'lunch';
   const dateQuery = date === today ? '' : `&date=${date}`;
@@ -83,109 +85,117 @@ export function Home() {
     return map;
   }, [entries, date]);
 
-  const month = fromDateKey(date).toLocaleDateString('en-MY', { month: 'long', year: 'numeric' });
+  const dayLabel = fromDateKey(date).toLocaleDateString('en-MY', { weekday: 'long', day: 'numeric', month: 'short' });
 
   return (
     <main className="screen home">
       <header className="home__head">
         <div>
-          <p className="home__greet">{greeting()},</p>
-          <h1 className="home__name">{profile.name || 'Kawan'}</h1>
+          <p className="eyebrow">{date === today ? `Today · ${dayLabel}` : dayLabel}</p>
+          <h1 className="home__greet">
+            {greeting()}
+            {profile.name ? `, ${profile.name}` : ''}
+          </h1>
         </div>
         <div className={`streak${streak ? '' : ' streak--zero'}`} aria-label={`${streak}-day logging streak`}>
-          <Fire size={20} weight="fill" />
-          <span className="num">{streak}</span>
-          <small>{streak === 1 ? 'day' : 'days'}</small>
+          <Fire size={18} weight="fill" />
+          <span className="display">{streak}</span>
+          <small>day streak</small>
         </div>
       </header>
 
-      <div className="home__week-head">
-        <span>{month}</span>
-        <div>
-          <button type="button" className="round-button round-button--ghost" onClick={() => goTo(addDays(date, -7))} aria-label="Previous week">
-            <CaretLeft size={18} weight="bold" />
-          </button>
-          <button
-            type="button"
-            className="round-button round-button--ghost"
-            onClick={() => goTo(addDays(date, 7) > today ? today : addDays(date, 7))}
-            disabled={weekDays(date).includes(today)}
-            aria-label="Next week"
-          >
-            <CaretRight size={18} weight="bold" />
-          </button>
-        </div>
+      <div className="home__week">
+        <button type="button" className="icon-button icon-button--ghost" onClick={() => goTo(addDays(date, -7))} aria-label="Previous week">
+          <CaretLeft size={16} weight="bold" />
+        </button>
+        <WeekStrip selected={date} today={today} eatenByDate={eatenByDate} targetKcal={target.targetKcal} onSelect={goTo} />
+        <button
+          type="button"
+          className="icon-button icon-button--ghost"
+          onClick={() => goTo(addDays(date, 7) > today ? today : addDays(date, 7))}
+          disabled={weekDays(date).includes(today)}
+          aria-label="Next week"
+        >
+          <CaretRight size={16} weight="bold" />
+        </button>
       </div>
-      <WeekStrip selected={date} today={today} eatenByDate={eatenByDate} targetKcal={target.targetKcal} onSelect={goTo} />
 
-      <section className={`hero${over ? ' hero--over' : ''}`} aria-label="Calories">
+      <section className={`card hero${over ? ' hero--over' : ''}`} aria-label="Calories">
         <div className="hero__top">
-          <div>
-            <p className="hero__label">{over ? 'Over your target' : 'Calories left'}</p>
-            <p className="hero__value num">{formatKcal(Math.abs(remaining))}</p>
-            <p className="hero__sub num">
-              {formatKcal(totals.energyKcal)} eaten · {formatKcal(target.targetKcal)} target
-            </p>
+          <div className="hero__main">
+            <p className="eyebrow">{over ? 'Over target' : 'Remaining'}</p>
+            <p className="hero__value display">{formatKcal(Math.abs(remaining))}</p>
+            <p className="hero__unit">kcal</p>
           </div>
           <CalorieRing
             progress={totals.energyKcal / target.targetKcal}
-            size={108}
-            stroke={11}
-            label={over ? `${formatKcal(-remaining)} kcal over target` : `${formatKcal(remaining)} kcal left`}
+            size={112}
+            stroke={9}
+            label={over ? `${formatKcal(-remaining)} kcal over target` : `${formatKcal(remaining)} kcal remaining`}
           >
-            <Fire size={24} weight="fill" className="hero__flame" />
-            <span className="hero__pct num">{Math.round((totals.energyKcal / target.targetKcal) * 100)}%</span>
+            <span className="hero__pct display">{percent}%</span>
+            <span className="hero__pct-label">of target</span>
           </CalorieRing>
         </div>
+        <dl className="hero__stats">
+          <div>
+            <dt>Target</dt>
+            <dd className="display">{formatKcal(target.targetKcal)}</dd>
+          </div>
+          <div>
+            <dt>Eaten</dt>
+            <dd className="display">{formatKcal(totals.energyKcal)}</dd>
+          </div>
+          <div>
+            <dt>Meals</dt>
+            <dd className="display">{dayEntries.length}</dd>
+          </div>
+        </dl>
         <div className="hero__macros">
-          <MacroMeter macro="carbs" grams={totals.carbohydrateG} targetGrams={macros.carbohydrateG} />
           <MacroMeter macro="protein" grams={totals.proteinG} targetGrams={macros.proteinG} />
+          <MacroMeter macro="carbs" grams={totals.carbohydrateG} targetGrams={macros.carbohydrateG} />
           <MacroMeter macro="fat" grams={totals.fatG} targetGrams={macros.fatG} />
         </div>
       </section>
 
       <div className="actions">
-        <Link to={`/scan?meal=${suggested}${dateQuery}`} className="action action--scan">
-          <span className="action__icon">
-            <Camera size={22} weight="fill" />
-          </span>
-          Scan meal
+        <Link to={`/scan?meal=${suggested}${dateQuery}`} className="action action--primary">
+          <Camera size={20} weight="bold" />
+          Scan
         </Link>
         <Link to={`/foods?meal=${suggested}${dateQuery}`} className="action">
-          <span className="action__icon">
-            <MagnifyingGlass size={22} weight="bold" />
-          </span>
-          Search food
+          <MagnifyingGlass size={20} weight="bold" />
+          Search
         </Link>
         <button type="button" className="action" onClick={() => setQuickAdd(suggested)}>
-          <span className="action__icon">
-            <Lightning size={22} weight="fill" />
-          </span>
+          <Lightning size={20} weight="bold" />
           Quick add
         </button>
       </div>
 
       <div className="section-head">
-        <h2 className="section-title">Meals</h2>
+        <h2 className="section-title">Food log</h2>
         <span className="home__total num">{formatKcal(totals.energyKcal)} kcal</span>
       </div>
 
       <div className="stack">
         {MEALS.map((meal) => {
           const list = meals[meal.id];
+          const mealTotals = sumNutrients(list);
           const MealIcon = MEAL_ICON[meal.id];
           return (
             <section key={meal.id} className="card meal" aria-labelledby={`meal-${meal.id}`}>
               <header className="meal__head">
-                <span className={`meal__icon meal__icon--${meal.id}`}>
-                  <MealIcon size={22} weight="fill" />
+                <span className="meal__icon">
+                  <MealIcon size={18} weight="bold" />
                 </span>
                 <div className="meal__titles">
                   <h3 id={`meal-${meal.id}`}>{meal.label}</h3>
-                  <p>{list.length ? `${formatKcal(sumNutrients(list).energyKcal)} kcal` : meal.localLabel}</p>
+                  <p>{meal.localLabel}</p>
                 </div>
-                <Link className="meal__add" to={`/foods?meal=${meal.id}${dateQuery}`} aria-label={`Add food to ${meal.label.toLowerCase()}`}>
-                  <Plus size={20} weight="bold" />
+                {list.length > 0 && <span className="meal__kcal display">{formatKcal(mealTotals.energyKcal)}</span>}
+                <Link className="icon-button meal__add" to={`/foods?meal=${meal.id}${dateQuery}`} aria-label={`Add food to ${meal.label.toLowerCase()}`}>
+                  <Plus size={16} weight="bold" />
                 </Link>
               </header>
               {list.length > 0 && (
@@ -193,15 +203,22 @@ export function Home() {
                   {list.map((entry) => (
                     <li key={entry.id}>
                       <button type="button" className="meal-entry" onClick={() => setEditing(entry)}>
-                        <FoodArt foodId={entry.foodId} category={entry.category} photo={entry.photo} size={46} />
+                        <FoodThumb category={entry.category} photo={entry.photo} size={40} />
                         <span className="meal-entry__text">
                           <span className="meal-entry__name">
                             {entry.foodName}
-                            {entry.source === 'scan' && <Camera size={13} weight="fill" aria-label="Scanned" />}
+                            {entry.source === 'scan' && <Camera size={12} weight="fill" aria-label="Scanned" />}
                           </span>
                           <span className="meal-entry__meta">{entryDetail(entry)}</span>
                         </span>
-                        <span className="meal-entry__kcal num">{formatKcal(entry.energyKcal)}</span>
+                        <span className="meal-entry__right">
+                          <span className="meal-entry__kcal display">{formatKcal(entry.energyKcal)}</span>
+                          {entry.source !== 'quick' && (
+                            <span className="meal-entry__macros num">
+                              P{Math.round(entry.proteinG)} C{Math.round(entry.carbohydrateG)} F{Math.round(entry.fatG)}
+                            </span>
+                          )}
+                        </span>
                       </button>
                     </li>
                   ))}
@@ -216,7 +233,7 @@ export function Home() {
         <PlateGuide />
       </div>
 
-      <p className="home__foot">Calories are estimates for standard servings, not measured portions. For general guidance only.</p>
+      <p className="home__foot">Estimates for standard servings, not measured portions. Not medical advice.</p>
 
       {editing && <EntrySheet entry={editing} onClose={() => setEditing(null)} />}
       {quickAdd && <QuickAddSheet date={date} initialMeal={quickAdd} onClose={() => setQuickAdd(null)} />}
@@ -241,6 +258,8 @@ function EntrySheet({ entry, onClose }: { entry: DiaryEntry; onClose: () => void
     toast({ message: `${entry.foodName} removed`, action: { label: 'Undo', onClick: () => addEntry(entry) } });
   };
 
+  const grams = { protein: draft.proteinG, carbs: draft.carbohydrateG, fat: draft.fatG };
+
   return (
     <BottomSheet
       title={entry.foodName}
@@ -248,7 +267,7 @@ function EntrySheet({ entry, onClose }: { entry: DiaryEntry; onClose: () => void
       footer={
         <>
           <button type="button" className="btn btn--danger" onClick={remove}>
-            <Trash size={20} weight="bold" /> Remove
+            <Trash size={18} weight="bold" /> Remove
           </button>
           <button type="button" className="btn btn--primary" onClick={save}>
             Save
@@ -257,7 +276,7 @@ function EntrySheet({ entry, onClose }: { entry: DiaryEntry; onClose: () => void
       }
     >
       <div className="entry-sheet__head">
-        <FoodArt foodId={entry.foodId} category={entry.category} photo={entry.photo} size={60} />
+        <FoodThumb category={entry.category} photo={entry.photo} size={56} />
         <div>
           <p className="entry-sheet__serving">{quick ? 'Calories only' : entryDetail({ ...entry, servings: 1 })}</p>
           <p className="entry-sheet__per num">{formatKcal(entry.perServing.energyKcal)} kcal per serving</p>
@@ -265,25 +284,22 @@ function EntrySheet({ entry, onClose }: { entry: DiaryEntry; onClose: () => void
       </div>
       {!quick && (
         <div className="entry-sheet__row">
-          <span>Servings</span>
+          <span className="eyebrow">Servings</span>
           <ServingStepper value={draft.servings} onChange={(servings) => setDraft((d) => withServings(d, servings))} label="Number of servings" />
         </div>
       )}
       <div className="entry-sheet__totals">
         <div>
-          <strong className="num">{formatKcal(draft.energyKcal)}</strong> kcal
+          <strong className="display">{formatKcal(draft.energyKcal)}</strong>
+          <span>kcal</span>
         </div>
         {!quick && (
           <ul>
-            <li>
-              <MacroDot macro="carbs" /> {formatGrams(draft.carbohydrateG)}
-            </li>
-            <li>
-              <MacroDot macro="protein" /> {formatGrams(draft.proteinG)}
-            </li>
-            <li>
-              <MacroDot macro="fat" /> {formatGrams(draft.fatG)}
-            </li>
+            {MACROS.map((m) => (
+              <li key={m}>
+                <MacroDot macro={m} /> {formatGrams(grams[m])}
+              </li>
+            ))}
           </ul>
         )}
       </div>
@@ -291,7 +307,7 @@ function EntrySheet({ entry, onClose }: { entry: DiaryEntry; onClose: () => void
       <MealPicker value={draft.meal} onChange={(meal) => setDraft((d) => ({ ...d, meal }))} />
       {entry.source === 'scan' && entry.confidence !== undefined && (
         <p className="entry-sheet__source">
-          <Camera size={16} weight="fill" /> From a scan · model confidence {Math.round(entry.confidence * 100)}%
+          <Camera size={14} weight="fill" /> From a scan · model confidence {Math.round(entry.confidence * 100)}%
         </p>
       )}
     </BottomSheet>

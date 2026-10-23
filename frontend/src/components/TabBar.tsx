@@ -14,7 +14,7 @@ function Tab({ to, label, icon: TabIcon }: (typeof TABS)[number]) {
     <NavLink to={to} end={to === '/'} className="tabbar__item">
       {({ isActive }) => (
         <>
-          <TabIcon size={26} weight={isActive ? 'fill' : 'regular'} />
+          <TabIcon size={24} weight={isActive ? 'fill' : 'regular'} />
           <span>{label}</span>
         </>
       )}
@@ -28,7 +28,7 @@ export function TabBar() {
       <Tab {...TABS[0]} />
       <Tab {...TABS[1]} />
       <Link to="/scan" className="tabbar__scan" aria-label="Scan food">
-        <Camera size={28} weight="fill" />
+        <Camera size={24} weight="bold" />
       </Link>
       <Tab {...TABS[2]} />
       <Tab {...TABS[3]} />

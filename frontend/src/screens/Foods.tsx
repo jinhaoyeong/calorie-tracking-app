@@ -1,7 +1,7 @@
 import { Camera, CaretLeft, Lightning, MagnifyingGlass, NotePencil, SealCheck, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { FoodArt } from '../art/FoodArt';
+import { MacroSplitBar } from '../components/MacroCharts';
 import { FoodRowContent } from '../components/FoodRow';
 import { QuickAddSheet } from '../components/QuickAddSheet';
 import { isDateKey, todayKey } from '../lib/date';
@@ -67,7 +67,7 @@ export function Foods() {
     <main className="screen foods">
       {picking ? (
         <div className="topbar">
-          <button type="button" className="round-button" onClick={() => navigate(-1)} aria-label="Back">
+          <button type="button" className="icon-button" onClick={() => navigate(-1)} aria-label="Back">
             <CaretLeft size={20} weight="bold" />
           </button>
           <h1 className="topbar__title">Add to {MEAL_LABEL[meal].toLowerCase()}</h1>
@@ -77,9 +77,9 @@ export function Foods() {
         <div className="page-head">
           <div>
             <h1 className="page-title">Foods</h1>
-            <p className="page-sub">{visible.length} Malaysian foods and drinks</p>
+            <p className="page-sub">{visible.length} Malaysian foods and drinks, per standard serving</p>
           </div>
-          <Link to={`/foods/new${suffix}`} className="round-button" aria-label="Create your own food">
+          <Link to={`/foods/new${suffix}`} className="icon-button" aria-label="Create your own food">
             <NotePencil size={20} weight="bold" />
           </Link>
         </div>
@@ -90,7 +90,7 @@ export function Foods() {
         <span className="visually-hidden">Search foods</span>
         <input
           type="search"
-          placeholder="Cari makanan… nasi lemak, teh tarik"
+          placeholder="Search foods, e.g. nasi lemak, teh tarik"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           enterKeyHint="search"
@@ -114,17 +114,17 @@ export function Foods() {
 
       {picking && !searching && filter === 'all' && (
         <div className="foods__shortcuts">
-          <Link to={`/scan${suffix}`} className="shortcut shortcut--scan">
-            <Camera size={22} weight="fill" />
-            <span>Scan</span>
+          <Link to={`/scan${suffix}`} className="action action--primary">
+            <Camera size={20} weight="bold" />
+            Scan
           </Link>
-          <button type="button" className="shortcut" onClick={() => setQuickAdd(true)}>
-            <Lightning size={22} weight="fill" />
-            <span>Quick add</span>
+          <button type="button" className="action" onClick={() => setQuickAdd(true)}>
+            <Lightning size={20} weight="bold" />
+            Quick add
           </button>
-          <Link to={`/foods/new${suffix}`} className="shortcut">
-            <NotePencil size={22} weight="fill" />
-            <span>Create</span>
+          <Link to={`/foods/new${suffix}`} className="action">
+            <NotePencil size={20} weight="bold" />
+            Create
           </Link>
         </div>
       )}
@@ -142,30 +142,31 @@ export function Foods() {
               <div className="section-head">
                 <h2 className="section-title">Recent</h2>
               </div>
-              <div className="carousel">
-                {recents.map((food) => (
-                  <Link key={food.id} to={`/foods/${food.id}${suffix}`} className="tile">
-                    <FoodArt foodId={food.id} category={food.category} size={96} />
-                    <span className="tile__name">{food.name}</span>
-                    <span className="tile__kcal num">{formatKcal(food.energyKcal)} kcal</span>
-                  </Link>
-                ))}
-              </div>
+              <ul className="card list">{recents.slice(0, 4).map(row)}</ul>
             </>
           )}
 
           <div className="section-head">
             <h2 className="section-title">Camera recognises</h2>
             <Link to={`/scan${suffix}`} className="section-link">
-              Scan
+              Open camera
             </Link>
           </div>
           <div className="carousel">
             {scanReady.map((food) => (
               <Link key={food.id} to={`/foods/${food.id}${suffix}`} className="tile">
-                <FoodArt foodId={food.id} category={food.category} size={96} />
+                <span className="tile__top">
+                  <Camera size={14} weight="fill" />
+                  <span className="tile__unit">{food.serving.localLabel}</span>
+                </span>
                 <span className="tile__name">{food.name}</span>
-                <span className="tile__kcal num">{formatKcal(food.energyKcal)} kcal</span>
+                <span className="tile__kcal">
+                  <span className="display">{formatKcal(food.energyKcal)}</span> kcal
+                </span>
+                <MacroSplitBar nutrients={food} width={104} />
+                <span className="tile__macros num">
+                  P {Math.round(food.proteinG)} · C {Math.round(food.carbohydrateG)} · F {Math.round(food.fatG)}
+                </span>
               </Link>
             ))}
           </div>
@@ -177,7 +178,7 @@ export function Foods() {
               <section key={category.id} aria-labelledby={`cat-${category.id}`}>
                 <div className="section-head">
                   <h2 id={`cat-${category.id}`} className="section-title">
-                    {category.name} <span className="foods__local">{category.localName}</span>
+                    {category.localName} <span className="foods__local">· {category.name}</span>
                   </h2>
                   <button type="button" className="section-link" onClick={() => setFilter(category.id)}>
                     See all
@@ -200,7 +201,7 @@ export function Foods() {
             to={`/foods/new?${new URLSearchParams({ ...Object.fromEntries(forward), ...(searching ? { name: query.trim() } : {}) })}`}
             className="btn btn--primary"
           >
-            <NotePencil size={20} weight="bold" /> Create {searching ? `“${query.trim()}”` : 'a food'}
+            <NotePencil size={18} weight="bold" /> Create {searching ? `“${query.trim()}”` : 'a food'}
           </Link>
         </div>
       )}

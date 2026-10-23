@@ -3,8 +3,9 @@
 Mobile web prototype for the FYP *AI-Based Malaysian Food Recognition and Personalised Calorie
 Monitoring for Fitness Users Using Transfer Learning*.
 
-*Kira kalori, cara Malaysia.* Snap a dish, confirm what it is, adjust it the way you actually
-ordered it (+ telur mata, kurang manis), and see how it fits your daily target.
+Calorie and macro tracking for people who train, built around Malaysian food. Snap a dish,
+confirm what it is, adjust it the way you actually ordered it (+ telur mata, kurang manis), and
+see how it fits your calorie and protein targets.
 
 The camera recognises the ten classes in the proposal: nasi lemak, roti canai, chicken rice,
 char kuey teow, mee goreng mamak, nasi goreng, laksa, satay, rendang and thosai. Everything else
@@ -48,42 +49,46 @@ app later (see [Going native](#going-native)).
 
 ### Screens
 
-- **Home**: greeting, logging streak, week strip with a progress ring per day, the dark calorie
-  card (left / over, macros), Scan / Search / Quick add, five meal cards with food art or your
-  meal photo, and the Pinggan Sihat tip. Tap an entry to change servings, move or remove it.
+- **Home**: date, logging streak, week strip with a progress ring per day, the calorie card
+  (remaining, % of target, target / eaten, protein-first macro meters), Scan / Search / Quick add,
+  the food log by meal with per-entry macros, and the Pinggan Sihat tip. Tap an entry to change
+  servings, move or remove it.
 - **Scan**: live camera preview with a shutter where the browser allows it (HTTPS or
   localhost), falling back to the phone's camera app and the gallery. The result shows your photo,
   the best match, confidence, alternatives and a search across every food, then the log panel.
 - **Foods**: search in English or Malay, category chips, recent foods, the dishes the camera
-  knows, and every category. Each food has its own page with add-ons, sweetness and a
-  nutrition-facts panel.
+  knows, and every category, each row showing kcal, P/C/F grams and a macro split bar. Each food
+  has a page with a macro donut, add-ons, sweetness and a nutrition-facts panel.
 - **Progress**: week view of daily calories against the target (tap a bar, or view as a table),
-  average, days within target, streak, macro energy split and most-logged foods.
+  daily average, difference from target, adherence (days within target), streak, calories by
+  macro and most-logged foods.
 - **Me**: name, age, height, weight and BMI, the full target calculation, settings (halal filter,
   meal photos, my foods), recognition model status, privacy and data deletion.
 
 ### Design
 
-Plus Jakarta Sans (bundled, works offline) on a cool neutral canvas, black pill buttons, a pandan
-green accent and a dark summary card. Every food has a flat, top-down illustration drawn in SVG
-(`frontend/src/art/`): bespoke art for the ten scan-ready dishes and tinted plate, bowl, glass,
-kuih and fruit art for the rest, so the app has no image files to download. Icons are from
-[Phosphor](https://phosphoricons.com/). The macro colours were checked for colour-vision
-deficiency in light and dark mode. Light and dark themes follow the phone's setting.
+A dark training-app interface: near-black surfaces with fine borders, one volt accent for calories
+and primary actions, and [Archivo](https://fonts.google.com/specimen/Archivo) (bundled, works
+offline) using its condensed width for numbers and headings. Foods are shown with data rather than
+pictures: kcal, protein / carbs / fat grams, a macro split bar in lists and a macro donut on each
+food page. Scanned meals can show your own photo. Goals and activity use training terms (Cut,
+Maintain, Lean bulk; Light, Regular, Hard training). Icons are from
+[Phosphor](https://phosphoricons.com/). The macro colours (protein orange, carbs aqua, fat violet)
+were checked as a set for colour-vision deficiency on the dark surface.
 
 ## Project layout
 
 ```
+api/index.py                Vercel serverless entry point for the FastAPI backend
 data/malaysian_foods.json   76 foods, categories and add-ons per standard serving (shared)
 backend/                    FastAPI service: upload validation, classification, nutrition lookup
   app/                      config, imaging, classifier (ONNX + demo), nutrition, main
   models/                   Drop model.onnx + model_config.json here
   tests/                    pytest suite
 frontend/                   React + TypeScript + Vite mobile web app
-  src/art/                  SVG food illustrations
   src/lib/                  energy maths, diary arithmetic, foods, dates, API client, image checks (+ tests)
   src/state/                on-device app state, toasts, model status
-  src/components/           UI building blocks (summary ring, week strip, log panel, sheets…)
+  src/components/           UI building blocks (ring, macro charts, week strip, log panel, sheets…)
   src/screens/              Home, Scan, Foods, Food detail, Create food, Progress, Me, Onboarding
 ```
 
@@ -126,6 +131,20 @@ Open http://localhost:5173. To try it on your phone, connect it to the same Wi-F
 | `PINGGAN_MAX_UPLOAD_BYTES` | `10485760` | Upload size limit |
 | `PINGGAN_CORS_ORIGINS` | *(none)* | Comma-separated origins, needed when the app is served from elsewhere (e.g. a native wrapper) |
 | `VITE_API_BASE` | *(same origin)* | API base URL used by the app at build time |
+
+## Deploying to Vercel
+
+The repository deploys to Vercel as one project, configured in `vercel.json`:
+
+- the mobile web app is built from `frontend/` and served as static files, with every non-API
+  path falling back to `index.html`;
+- the FastAPI backend runs as a Python serverless function (`api/index.py`) at `/api/*` on the
+  same domain, using the root `requirements.txt`.
+
+Import the GitHub repository in Vercel (leave the root directory as the repository root); every
+push to `main` then deploys to production. The deployed API runs the demo classifier. To serve a
+trained model there, add `onnxruntime` to the root `requirements.txt` and make the model files
+available to the function (they are git-ignored by default).
 
 ## Connecting the trained model
 

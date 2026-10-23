@@ -1,19 +1,19 @@
 import type { ActivityLevel, Goal, Profile, Sex } from './types';
 
 export const ACTIVITY_LEVELS: Record<ActivityLevel, { label: string; detail: string; multiplier: number }> = {
-  sedentary: { label: 'Sedentary', detail: 'Desk-based day, little or no exercise', multiplier: 1.2 },
-  light: { label: 'Lightly active', detail: 'Exercise 1–3 days a week', multiplier: 1.375 },
-  moderate: { label: 'Moderately active', detail: 'Exercise 3–5 days a week', multiplier: 1.55 },
-  very: { label: 'Very active', detail: 'Hard training 6–7 days a week', multiplier: 1.725 },
-  extra: { label: 'Extra active', detail: 'Physical job plus daily training', multiplier: 1.9 },
+  sedentary: { label: 'Mostly sitting', detail: 'Desk job, little structured exercise', multiplier: 1.2 },
+  light: { label: 'Light training', detail: '1–3 sessions a week', multiplier: 1.375 },
+  moderate: { label: 'Regular training', detail: '3–5 sessions a week', multiplier: 1.55 },
+  very: { label: 'Hard training', detail: '6–7 sessions a week', multiplier: 1.725 },
+  extra: { label: 'Athlete', detail: 'Twice-a-day sessions or a physical job', multiplier: 1.9 },
 };
 
 export const ACTIVITY_ORDER: ActivityLevel[] = ['sedentary', 'light', 'moderate', 'very', 'extra'];
 
 export const GOALS: Record<Goal, { label: string; detail: string; adjustmentKcal: number }> = {
-  lose: { label: 'Lose fat', detail: 'About 0.5 kg a week, 500 kcal below maintenance', adjustmentKcal: -500 },
-  maintain: { label: 'Maintain weight', detail: 'Eat around your maintenance level', adjustmentKcal: 0 },
-  gain: { label: 'Build muscle', detail: 'A small 300 kcal surplus to support training', adjustmentKcal: 300 },
+  lose: { label: 'Cut', detail: 'Lose fat, about 0.5 kg a week · −500 kcal', adjustmentKcal: -500 },
+  maintain: { label: 'Maintain', detail: 'Hold weight and recomp · ±0 kcal', adjustmentKcal: 0 },
+  gain: { label: 'Lean bulk', detail: 'Build muscle with a small surplus · +300 kcal', adjustmentKcal: 300 },
 };
 
 export const GOAL_ORDER: Goal[] = ['lose', 'maintain', 'gain'];

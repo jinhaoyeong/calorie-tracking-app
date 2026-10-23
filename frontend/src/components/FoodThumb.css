@@ -1,0 +1,13 @@
+.thumb {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.thumb--photo {
+  object-fit: cover;
+}

@@ -1,7 +1,6 @@
 import { CaretLeft, ShieldCheck } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FoodArt } from '../art/FoodArt';
 import { ActivityChoice, Field, GoalChoice, SexChoice, toDraft, type ProfileForm } from '../components/ProfileFields';
 import { TargetBreakdown } from '../components/TargetBreakdown';
 import {
@@ -13,9 +12,8 @@ import {
   validateProfile,
   type ProfileErrors,
 } from '../lib/energy';
-import { FOODS } from '../lib/foods';
+import { FOODS, SCAN_FOODS } from '../lib/foods';
 import { formatKcal } from '../lib/format';
-import type { FoodCategory } from '../lib/types';
 import { useApp } from '../state/AppState';
 import './Onboarding.css';
 
@@ -31,16 +29,38 @@ const STEP_FIELDS: Record<Step, (keyof ProfileErrors)[]> = {
   target: [],
 };
 
-/** Collage on the welcome screen: [food, category, size, x%, y%, rotation]. */
-const COLLAGE: [string, FoodCategory, number, number, number, number][] = [
-  ['nasi_lemak', 'rice', 150, 50, 34, -6],
-  ['roti_canai', 'bread', 104, 14, 14, 8],
-  ['teh_tarik', 'drinks', 86, 86, 12, -10],
-  ['satay', 'mains', 108, 86, 60, 12],
-  ['laksa', 'noodles', 112, 13, 64, -8],
-  ['kuih_lapis', 'kuih', 76, 38, 78, 10],
-  ['cendol', 'dessert', 84, 64, 82, -6],
-];
+/** Product visual for the welcome screen: calorie and macro rings as they appear in the app. */
+function RingsVisual() {
+  const rings = [
+    { r: 104, value: 0.72, color: 'var(--accent)' },
+    { r: 84, value: 0.86, color: 'var(--protein)' },
+    { r: 64, value: 0.58, color: 'var(--carbs)' },
+    { r: 44, value: 0.47, color: 'var(--fat)' },
+  ];
+  return (
+    <svg className="welcome__rings" viewBox="0 0 240 240" aria-hidden="true">
+      {rings.map(({ r, value, color }) => {
+        const c = 2 * Math.PI * r;
+        return (
+          <g key={r}>
+            <circle cx="120" cy="120" r={r} fill="none" stroke="var(--surface-3)" strokeWidth="12" />
+            <circle
+              cx="120"
+              cy="120"
+              r={r}
+              fill="none"
+              stroke={color}
+              strokeWidth="12"
+              strokeLinecap="round"
+              strokeDasharray={`${c * value} ${c}`}
+              transform="rotate(-90 120 120)"
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
 
 export function Onboarding() {
   const navigate = useNavigate();
@@ -62,28 +82,53 @@ export function Onboarding() {
   if (stepIndex < 0) {
     return (
       <main className="welcome">
-        <div className="welcome__collage" aria-hidden="true">
-          {COLLAGE.map(([id, category, size, x, y, rotate]) => (
-            <span key={id} className="welcome__food" style={{ left: `${x}%`, top: `${y}%`, transform: `translate(-50%, -50%) rotate(${rotate}deg)` }}>
-              <FoodArt foodId={id} category={category} size={size} tile={false} />
-            </span>
-          ))}
+        <div className="welcome__brand">
+          <img src="/icon.svg" alt="" width={32} height={32} />
+          <span>Pinggan</span>
+        </div>
+        <div className="welcome__visual">
+          <RingsVisual />
+          <dl className="welcome__legend">
+            <div>
+              <dt>
+                <span className="welcome__key welcome__key--kcal" /> Calories
+              </dt>
+              <dd className="display">1,512 left</dd>
+            </div>
+            <div>
+              <dt>
+                <span className="welcome__key welcome__key--protein" /> Protein
+              </dt>
+              <dd className="display">104 / 120 g</dd>
+            </div>
+          </dl>
         </div>
         <div className="welcome__content">
-          <div className="welcome__brand">
-            <img src="/icon.svg" alt="" width={36} height={36} />
-            <span>Pinggan</span>
-          </div>
-          <h1 className="welcome__headline">Kira kalori, cara Malaysia.</h1>
+          <p className="eyebrow">Calorie & macro tracking · Malaysia</p>
+          <h1 className="welcome__headline">Fuel your training.</h1>
           <p className="welcome__lede">
-            Snap your nasi lemak, roti canai or teh tarik and see how it fits into your day. {FOODS.length} local foods,
-            kurang manis included.
+            Scan your nasi lemak or roti canai, hit your protein and stay on target, with nutrition data for {FOODS.length}{' '}
+            Malaysian foods and drinks.
           </p>
+          <ul className="welcome__facts">
+            <li>
+              <strong className="display">{FOODS.length}</strong>
+              <span>Local foods</span>
+            </li>
+            <li>
+              <strong className="display">{SCAN_FOODS.length}</strong>
+              <span>Dishes by camera</span>
+            </li>
+            <li>
+              <strong className="display">P·C·F</strong>
+              <span>Macro targets</span>
+            </li>
+          </ul>
           <button type="button" className="btn btn--primary btn--block" onClick={() => setStepIndex(0)}>
             Get started
           </button>
           <p className="welcome__privacy">
-            <ShieldCheck size={16} weight="fill" /> Your details stay on this phone
+            <ShieldCheck size={14} weight="fill" /> Your data stays on this device
           </p>
         </div>
       </main>
@@ -114,7 +159,7 @@ export function Onboarding() {
   return (
     <main className="screen screen--cta onboarding">
       <div className="topbar">
-        <button type="button" className="round-button" onClick={() => setStepIndex(stepIndex - 1)} aria-label="Back">
+        <button type="button" className="icon-button" onClick={() => setStepIndex(stepIndex - 1)} aria-label="Back">
           <CaretLeft size={20} weight="bold" />
         </button>
         <div className="onboarding__progress" role="progressbar" aria-valuemin={1} aria-valuemax={STEPS.length} aria-valuenow={stepIndex + 1}>
@@ -127,8 +172,8 @@ export function Onboarding() {
 
       {step === 'name' && (
         <>
-          <h1 className="onboarding__title">Hai! What should we call you?</h1>
-          <p className="onboarding__lede">We’ll use it to greet you. You can leave it blank.</p>
+          <h1 className="onboarding__title">What should we call you?</h1>
+          <p className="onboarding__lede">Used to personalise the app. Optional.</p>
           <div className="onboarding__fields">
             <Field id="name" label="Name" value={form.name} onChange={(name) => update({ name })} error={errors.name} text placeholder="e.g. Aina" />
           </div>
@@ -138,7 +183,7 @@ export function Onboarding() {
       {step === 'about' && (
         <>
           <h1 className="onboarding__title">About you</h1>
-          <p className="onboarding__lede">Sex and age are part of the resting energy formula.</p>
+          <p className="onboarding__lede">Sex and age feed the resting energy equation.</p>
           <div className="onboarding__fields">
             <SexChoice value={form.sex} onChange={(sex) => update({ sex })} />
             {errors.sex && <p className="field__error onboarding__error">{errors.sex}</p>}
@@ -169,8 +214,8 @@ export function Onboarding() {
 
       {step === 'activity' && (
         <>
-          <h1 className="onboarding__title">How active are you?</h1>
-          <p className="onboarding__lede">Think about a usual week, including training and your job.</p>
+          <h1 className="onboarding__title">Training load</h1>
+          <p className="onboarding__lede">Pick what a normal week looks like, including your job.</p>
           <div className="onboarding__fields">
             <ActivityChoice value={form.activity} onChange={(activity) => update({ activity })} />
             {errors.activity && <p className="field__error onboarding__error">{errors.activity}</p>}
@@ -180,8 +225,8 @@ export function Onboarding() {
 
       {step === 'goal' && (
         <>
-          <h1 className="onboarding__title">What’s your goal?</h1>
-          <p className="onboarding__lede">This moves your target up or down from maintenance.</p>
+          <h1 className="onboarding__title">Your goal</h1>
+          <p className="onboarding__lede">Sets your calorie target relative to maintenance.</p>
           <div className="onboarding__fields">
             <GoalChoice value={form.goal} onChange={(goal) => update({ goal })} />
             {errors.goal && <p className="field__error onboarding__error">{errors.goal}</p>}
@@ -192,13 +237,10 @@ export function Onboarding() {
       {step === 'target' && previewProfile && previewTarget && (
         <>
           <div className="onboarding__result">
-            <p className="onboarding__result-label">{form.name.trim() ? `${form.name.trim()}, your` : 'Your'} daily target</p>
-            <p className="onboarding__result-value num">
+            <p className="eyebrow">Daily target</p>
+            <p className="onboarding__result-value display">
               {formatKcal(previewTarget.targetKcal)}
               <span>kcal</span>
-            </p>
-            <p className="onboarding__result-hint">
-              About {Math.round(previewTarget.targetKcal / 389)} plates of nasi lemak, if that’s all you ate.
             </p>
           </div>
           <div className="card">
@@ -206,7 +248,7 @@ export function Onboarding() {
           </div>
           <label className="onboarding__ack">
             <input type="checkbox" checked={acknowledged} onChange={(e) => setAcknowledged(e.target.checked)} />
-            <span>I understand this is an estimate for general guidance, not medical or dietary advice.</span>
+            <span>I understand these targets are estimates for general guidance, not medical or dietary advice.</span>
           </label>
         </>
       )}

@@ -1,10 +1,7 @@
 import { Warning } from '@phosphor-icons/react';
 import { formatGrams } from '../lib/format';
+import { MACRO_LABEL, type Macro } from './MacroCharts';
 import './MacroMeter.css';
-
-export type Macro = 'carbs' | 'protein' | 'fat';
-
-export const MACRO_LABEL: Record<Macro, string> = { carbs: 'Carbs', protein: 'Protein', fat: 'Fat' };
 
 interface Props {
   macro: Macro;
@@ -12,7 +9,7 @@ interface Props {
   targetGrams: number;
 }
 
-/** Macro progress on the dark summary card. */
+/** Progress towards a daily macro target. */
 export function MacroMeter({ macro, grams, targetGrams }: Props) {
   const fraction = targetGrams > 0 ? Math.min(grams / targetGrams, 1) : 0;
   const over = grams > targetGrams;
@@ -20,9 +17,9 @@ export function MacroMeter({ macro, grams, targetGrams }: Props) {
     <div className={`macro macro--${macro}${over ? ' macro--over' : ''}`}>
       <div className="macro__label">{MACRO_LABEL[macro]}</div>
       <div className="macro__value num">
-        {over && <Warning size={13} weight="bold" className="macro__over-icon" />}
-        <strong>{Math.round(grams)}</strong>
-        <span>/{Math.round(targetGrams)}g</span>
+        <strong className="display">{Math.round(grams)}</strong>
+        <span>/ {Math.round(targetGrams)} g</span>
+        {over && <Warning size={13} weight="bold" className="macro__over-icon" aria-label="over target" />}
       </div>
       <div
         className="macro__track"
@@ -37,9 +34,4 @@ export function MacroMeter({ macro, grams, targetGrams }: Props) {
       </div>
     </div>
   );
-}
-
-/** Small coloured key used next to gram values on light surfaces. */
-export function MacroDot({ macro }: { macro: Macro }) {
-  return <span className={`macro-dot macro-dot--${macro}`} aria-hidden="true" />;
 }

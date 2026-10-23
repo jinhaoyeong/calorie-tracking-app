@@ -1,7 +1,7 @@
 import { CaretLeft } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FoodArt } from '../art/FoodArt';
+import { FoodThumb } from '../components/FoodThumb';
 import { Field } from '../components/ProfileFields';
 import { isDateKey } from '../lib/date';
 import { createCustomFood, isMealType, validateCustomFood, type CustomFoodErrors, type CustomFoodInput } from '../lib/diary';
@@ -54,7 +54,7 @@ export function CreateFood() {
   return (
     <main className="screen screen--cta create">
       <div className="topbar">
-        <button type="button" className="round-button" onClick={() => navigate(-1)} aria-label="Back">
+        <button type="button" className="icon-button" onClick={() => navigate(-1)} aria-label="Back">
           <CaretLeft size={20} weight="bold" />
         </button>
         <h1 className="topbar__title">Create food</h1>
@@ -62,8 +62,8 @@ export function CreateFood() {
       </div>
 
       <p className="create__lede">
-        Masakan rumah or a stall favourite that isn’t listed? Add it once and log it any time. Check the packet or a
-        nutrition app for the calories.
+        Add home cooking or a stall dish that isn’t listed, then log it any time. Use the label or a trusted nutrition
+        source for the numbers.
       </p>
 
       <div className="card card--pad create__card">
@@ -81,20 +81,20 @@ export function CreateFood() {
         <Field id="food-kcal" label="Calories per serving" unit="kcal" value={kcal} onChange={setKcal} error={errors.energyKcal} />
       </div>
 
-      <h2 className="section-label create__label">Type</h2>
+      <h2 className="section-label create__label">Category</h2>
       <div className="create__types" role="radiogroup" aria-label="Type of food">
         {CATEGORIES.map((c) => (
           <button key={c.id} type="button" role="radio" aria-checked={category === c.id} className="create__type" onClick={() => setCategory(c.id)}>
-            <FoodArt foodId={`category-${c.id}`} category={c.id} size={44} />
-            <span>{c.name}</span>
+            <FoodThumb category={c.id} size={36} />
+            <span>{c.localName}</span>
           </button>
         ))}
       </div>
 
-      <h2 className="section-label create__label">Macronutrients (optional)</h2>
+      <h2 className="section-label create__label">Macros per serving (optional)</h2>
       <div className="card card--pad create__macros">
-        <Field id="food-carbs" label="Carbs" unit="g" value={carbs} onChange={setCarbs} error={errors.carbohydrateG} decimal />
         <Field id="food-protein" label="Protein" unit="g" value={protein} onChange={setProtein} error={errors.proteinG} decimal />
+        <Field id="food-carbs" label="Carbs" unit="g" value={carbs} onChange={setCarbs} error={errors.carbohydrateG} decimal />
         <Field id="food-fat" label="Fat" unit="g" value={fat} onChange={setFat} error={errors.fatG} decimal />
       </div>
 

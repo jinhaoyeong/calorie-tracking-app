@@ -1,41 +1,12 @@
 .foods__filters {
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .foods__shortcuts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.shortcut {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 14px 8px;
-  border: 0;
-  border-radius: 18px;
-  background: var(--surface);
-  box-shadow: var(--shadow-card);
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
-}
-
-.shortcut svg {
-  color: var(--ink-2);
-}
-
-.shortcut--scan {
-  background: var(--accent);
-  color: var(--on-accent);
-}
-
-.shortcut--scan svg {
-  color: inherit;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .foods__halal {
@@ -43,24 +14,21 @@
   align-items: center;
   gap: 6px;
   margin-top: 14px;
-  color: var(--accent-strong);
-  font-size: 13px;
-  font-weight: 700;
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .foods__local {
-  margin-left: 4px;
   color: var(--ink-3);
-  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0;
 }
 
 .carousel {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin: 0 calc(var(--gutter) * -1);
-  padding: 2px var(--gutter) 6px;
+  padding: 1px var(--gutter) 4px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -74,37 +42,73 @@
   display: flex;
   flex: none;
   flex-direction: column;
-  gap: 2px;
-  width: 116px;
-  padding: 10px 10px 12px;
-  border-radius: 20px;
+  gap: 6px;
+  width: 144px;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
   color: var(--ink);
   text-decoration: none;
   scroll-snap-align: start;
 }
 
-.tile .food-art {
-  margin-bottom: 8px;
+.tile:active {
+  background: var(--surface-2);
+}
+
+.tile__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--accent);
+}
+
+.tile__top svg {
+  flex: none;
+}
+
+.tile__unit {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tile__name {
   overflow: hidden;
+  margin-top: 4px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .tile__kcal {
   color: var(--ink-3);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tile__kcal .display {
+  color: var(--ink);
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+.tile__macros {
+  color: var(--ink-3);
+  font-size: 11px;
 }
 
 .foods__results {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .foods__empty {
@@ -121,8 +125,10 @@
 
 .foods__empty-title {
   color: var(--ink);
-  font-size: 18px;
+  font-size: 22px;
+  font-stretch: var(--condensed);
   font-weight: 800;
+  text-transform: uppercase;
 }
 
 .foods__empty .btn {
@@ -130,7 +136,7 @@
 }
 
 .foods__source {
-  margin: 22px 6px 0;
+  margin: 22px 2px 0;
   color: var(--ink-3);
   font-size: 12px;
   line-height: 1.5;

@@ -37,7 +37,7 @@ export function EditProfile() {
   return (
     <main className="screen screen--cta">
       <div className="topbar">
-        <button type="button" className="round-button" onClick={() => navigate(-1)} aria-label="Back">
+        <button type="button" className="icon-button" onClick={() => navigate(-1)} aria-label="Back">
           <CaretLeft size={20} weight="bold" />
         </button>
         <h1 className="topbar__title">Edit profile</h1>

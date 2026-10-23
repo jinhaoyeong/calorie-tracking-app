@@ -1,6 +1,5 @@
 import { ArrowsClockwise, CaretLeft, Check, Cpu, Info, MagnifyingGlass, Warning } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { FoodArt } from '../art/FoodArt';
 import { BottomSheet } from '../components/BottomSheet';
 import { FoodRowContent } from '../components/FoodRow';
 import { LogFood } from '../components/LogFood';
@@ -67,7 +66,6 @@ export function ScanResult({ photoUrl, photo, result, date, meal, onRetake }: Pr
         )}
 
         <div className="result__match">
-          {food && <FoodArt foodId={food.id} category={food.category} size={64} />}
           <div className="result__titles">
             <p className="result__eyebrow">{isTop ? 'Best match' : 'Your choice'}</p>
             <h1 className="result__name">{name}</h1>
@@ -108,13 +106,11 @@ export function ScanResult({ photoUrl, photo, result, date, meal, onRetake }: Pr
         )}
 
         <div className="result__alts">
-          <p className="result__alts-title">Not right?</p>
+          <p className="result__alts-title">Not right? Choose another</p>
           <div className="chips chips--scroll">
             {alternatives.map((alt) => {
-              const altFood = findFood(alt.foodId);
               return (
-                <button key={alt.foodId} type="button" className="chip result__alt" onClick={() => setSelectedId(alt.foodId)}>
-                  {altFood && <FoodArt foodId={altFood.id} category={altFood.category} size={26} />}
+                <button key={alt.foodId} type="button" className="chip" onClick={() => setSelectedId(alt.foodId)}>
                   {alt.name}
                   <span className="chip__meta num">{formatConfidence(alt.confidence)}</span>
                 </button>
@@ -146,7 +142,7 @@ export function ScanResult({ photoUrl, photo, result, date, meal, onRetake }: Pr
           <label className="search result__search">
             <MagnifyingGlass size={20} weight="bold" />
             <span className="visually-hidden">Search foods</span>
-            <input type="search" placeholder="Cari makanan…" value={query} onChange={(e) => setQuery(e.target.value)} />
+            <input type="search" placeholder="Search foods" value={query} onChange={(e) => setQuery(e.target.value)} />
           </label>
           <ul className="list">
             {pickable.map((option) => (

@@ -1,0 +1,89 @@
+.macro-dot {
+  display: inline-block;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--carbs);
+}
+
+.macro-dot--protein {
+  background: var(--protein);
+}
+
+.macro-dot--fat {
+  background: var(--fat);
+}
+
+.split-bar {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.split-bar__part {
+  flex-basis: 0;
+  min-width: 2px;
+}
+
+.split-bar__part--protein,
+.donut__part--protein {
+  background: var(--protein);
+  stroke: var(--protein);
+}
+
+.split-bar__part--carbs,
+.donut__part--carbs {
+  background: var(--carbs);
+  stroke: var(--carbs);
+}
+
+.split-bar__part--fat,
+.donut__part--fat {
+  background: var(--fat);
+  stroke: var(--fat);
+}
+
+.donut {
+  position: relative;
+  flex: none;
+}
+
+.donut svg {
+  display: block;
+}
+
+.donut__track {
+  fill: none;
+  stroke: var(--surface-3);
+}
+
+.donut__part {
+  fill: none;
+}
+
+.donut__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut__value {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.donut__unit {
+  margin-top: 2px;
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

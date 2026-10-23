@@ -18,7 +18,7 @@ import type { Addon, Food, MealType, Sweetness } from '../lib/types';
 import { useProfile } from '../state/AppState';
 import { useToast } from '../state/Toast';
 import { MealPicker, Segmented, ServingStepper, Switch } from './Controls';
-import { MacroDot } from './MacroMeter';
+import { MacroDot } from './MacroCharts';
 import './LogFood.css';
 
 interface Props {
@@ -96,7 +96,7 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
 
         {availableAddons.length > 0 && (
           <div className="log__group">
-            <h3 className="log__label">Tambah</h3>
+            <h3 className="log__label">Add-ons · Tambah</h3>
             <div className="chips">
               {availableAddons.map((addon) => {
                 const on = selectedAddons.includes(addon.id);
@@ -129,21 +129,21 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
 
         <div className="log__totals">
           <div className="log__kcal">
-            <strong className="num">{formatKcal(portion.energyKcal)}</strong>
+            <strong className="display">{formatKcal(portion.energyKcal)}</strong>
             <span>kcal</span>
           </div>
           <dl className="log__macros">
             <div>
               <dt>
-                <MacroDot macro="carbs" /> Carbs
-              </dt>
-              <dd className="num">{formatGrams(portion.carbohydrateG)}</dd>
-            </div>
-            <div>
-              <dt>
                 <MacroDot macro="protein" /> Protein
               </dt>
               <dd className="num">{formatGrams(portion.proteinG)}</dd>
+            </div>
+            <div>
+              <dt>
+                <MacroDot macro="carbs" /> Carbs
+              </dt>
+              <dd className="num">{formatGrams(portion.carbohydrateG)}</dd>
             </div>
             <div>
               <dt>
@@ -157,7 +157,7 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
 
       <section className="card log__block" aria-labelledby="impact-title">
         <h2 id="impact-title" className="log__title">
-          Your day after this
+          Today after this meal
         </h2>
         <div className="log__bar" aria-hidden="true">
           {eatenKcal > 0 && <span className="log__bar-eaten" style={{ width: `${(eatenKcal / scale) * 100}%` }} />}
@@ -178,12 +178,12 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
         </ul>
         <div className="log__stats">
           <div>
-            <span>Share of daily target</span>
-            <strong className="num">{shareOfTarget(portion.energyKcal, target.targetKcal)}%</strong>
+            <span>Of daily target</span>
+            <strong className="display">{shareOfTarget(portion.energyKcal, target.targetKcal)}%</strong>
           </div>
           <div>
             <span>{remainingAfter < 0 ? 'Over target' : 'Left after'}</span>
-            <strong className={`num${remainingAfter < 0 ? ' log__over' : ''}`}>
+            <strong className={`display${remainingAfter < 0 ? ' log__over' : ''}`}>
               {remainingAfter < 0 && <Warning size={16} weight="bold" />}
               {formatKcal(Math.abs(remainingAfter))} kcal
             </strong>
@@ -202,7 +202,7 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
         <div className="card log__photo">
           <div>
             <strong>Keep photo in diary</strong>
-            <span>Saved on this phone only, never uploaded</span>
+            <span>Stored on this phone only</span>
           </div>
           <Switch
             checked={preferences.savePhotos}

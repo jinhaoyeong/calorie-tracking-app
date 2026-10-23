@@ -1,47 +1,54 @@
 .plate-guide {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-}
-
-.plate-guide svg {
-  flex: none;
-}
-
-.plate-guide__eyebrow {
-  color: var(--accent-strong);
-  font-size: 12px;
-  font-weight: 800;
+  padding: 16px;
 }
 
 .plate-guide__title {
-  margin-top: 1px;
-  font-size: 18px;
+  margin-top: 4px;
+  font-size: 24px;
+  font-stretch: var(--condensed);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.plate-guide__bar {
+  display: flex;
+  gap: 3px;
+  height: 6px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.plate-guide__bar span {
+  flex-basis: 0;
+  background: var(--ink-2);
+}
+
+.plate-guide__bar span:nth-child(2),
+.plate-guide__bar span:nth-child(3) {
+  background: var(--surface-3);
+}
+
+.plate-guide__bar span:nth-child(3) {
+  background: var(--line-strong);
 }
 
 .plate-guide__legend {
   display: grid;
-  gap: 3px;
-  margin: 8px 0 0;
-  padding: 0;
-  color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 600;
-  list-style: none;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0 0;
 }
 
-.plate-guide__legend li {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.plate-guide__legend dt {
+  font-size: 20px;
+  font-stretch: var(--condensed);
+  font-weight: 800;
 }
 
-.plate-guide__legend span {
-  flex: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 3px;
+.plate-guide__legend dd {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.3;
 }

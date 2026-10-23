@@ -1,0 +1,6 @@
+# Python dependencies for the Vercel serverless API (api/index.py).
+# The deployed API runs the demo classifier; local development uses backend/requirements.txt.
+fastapi==0.115.6
+python-multipart==0.0.19
+pillow==11.0.0
+numpy==2.1.3

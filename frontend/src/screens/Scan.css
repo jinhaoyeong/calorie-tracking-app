@@ -11,7 +11,7 @@
   flex: 1;
   min-height: 460px;
   overflow: hidden;
-  border-radius: 0 0 28px 28px;
+  border-radius: 0 0 22px 22px;
   background: #16181c;
 }
 
@@ -61,37 +61,37 @@
 
 .camera__frame span {
   position: absolute;
-  width: 46px;
-  height: 46px;
-  border: 0 solid #fff;
+  width: 40px;
+  height: 40px;
+  border: 0 solid var(--accent);
 }
 
 .camera__frame span:nth-child(1) {
   top: 0;
   left: 0;
-  border-width: 4px 0 0 4px;
-  border-top-left-radius: 22px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 14px;
 }
 
 .camera__frame span:nth-child(2) {
   top: 0;
   right: 0;
-  border-width: 4px 4px 0 0;
-  border-top-right-radius: 22px;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 14px;
 }
 
 .camera__frame span:nth-child(3) {
   bottom: 0;
   left: 0;
-  border-width: 0 0 4px 4px;
-  border-bottom-left-radius: 22px;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 14px;
 }
 
 .camera__frame span:nth-child(4) {
   right: 0;
   bottom: 0;
-  border-width: 0 4px 4px 0;
-  border-bottom-right-radius: 22px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 14px;
 }
 
 .camera__scanline {
@@ -101,7 +101,7 @@
   height: 3px;
   border-radius: 2px;
   background: var(--accent);
-  box-shadow: 0 0 18px 4px rgba(47, 196, 113, 0.6);
+  box-shadow: 0 0 18px 4px rgba(200, 255, 46, 0.55);
   animation: scan 1.6s ease-in-out infinite alternate;
 }
 
@@ -129,10 +129,10 @@
 .camera__spacer {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 12px;
   background: rgba(0, 0, 0, 0.45);
   color: #fff;
   backdrop-filter: blur(8px);
@@ -143,8 +143,10 @@
 }
 
 .camera__title {
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .camera__hint {
@@ -154,11 +156,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  font-size: 14px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
   transform: translateX(-50%);
   backdrop-filter: blur(8px);
@@ -190,8 +194,10 @@
   border: 0;
   background: none;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
@@ -223,32 +229,18 @@
 }
 
 .camera__supported {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  display: block;
   width: 100%;
-  margin-top: 22px;
-  padding: 10px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius);
+  background: transparent;
   color: #fff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-}
-
-.camera__faces {
-  display: flex;
-}
-
-.camera__faces .food-art {
-  border: 2px solid #000;
-  border-radius: 50%;
-}
-
-.camera__faces .food-art + .food-art {
-  margin-left: -8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .camera__privacy {
@@ -268,22 +260,8 @@
 }
 
 .camera__ghost {
-  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
+  background: transparent;
   color: #fff;
 }
 
-.scan-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px 8px;
-}
-
-.scan-list__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-}
