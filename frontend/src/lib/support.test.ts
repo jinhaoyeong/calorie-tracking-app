@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addDays, formatDayTitle, greeting, isDateKey, startOfWeek, toDateKey, weekDays } from './date';
-import { CATEGORIES, FOODS, findFood, isVisible, SCAN_FOODS, searchFoods } from './foods';
+import { CATEGORIES, FOODS, findFood, isVisible, recognisableFoods, SCAN_FOODS, searchFoods } from './foods';
 import { formatCompact, formatGrams, formatKcal, formatSigned } from './format';
 import { checkImage, MAX_UPLOAD_BYTES, sniffImageKind } from './image';
 
@@ -86,6 +86,14 @@ describe('food database', () => {
     expect(pork).toEqual(expect.arrayContaining(['bak_kut_teh', 'char_siu_pau']));
     expect(pork).not.toContain('nasi_lemak');
     expect(FOODS.every((f) => isVisible(f, false))).toBe(true);
+  });
+});
+
+describe('recognisable foods', () => {
+  it('follows the labels the recogniser reports', () => {
+    expect(recognisableFoods()).toEqual(SCAN_FOODS);
+    expect(recognisableFoods(FOODS.map((food) => food.id))).toHaveLength(FOODS.length);
+    expect(recognisableFoods(['laksa', 'kuih_unknown', 'nasi_lemak']).map((food) => food.id)).toEqual(['nasi_lemak', 'laksa']);
   });
 });
 

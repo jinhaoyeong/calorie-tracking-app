@@ -7,8 +7,10 @@ backend/models/model.onnx
 backend/models/model_config.json
 ```
 
-While `model.onnx` is absent the API runs a **demo classifier**: predictions are placeholders,
-and the app labels them as demo output.
+While `model.onnx` is absent the API recognises dishes with Claude when `ANTHROPIC_API_KEY` is
+set, and otherwise runs a **demo classifier** whose predictions are placeholders (the app labels
+them as demo output). Once the model is here it takes priority; set `PINGGAN_RECOGNIZER=claude`
+to compare against Claude.
 
 ## model_config.json
 

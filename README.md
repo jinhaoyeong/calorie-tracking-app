@@ -7,10 +7,12 @@ Calorie and macro tracking for people who train, built around Malaysian food. Sn
 confirm what it is, adjust it the way you actually ordered it (+ telur mata, kurang manis), and
 see how it fits your calorie and protein targets.
 
-The camera recognises the ten classes in the proposal: nasi lemak, roti canai, chicken rice,
-char kuey teow, mee goreng mamak, nasi goreng, laksa, satay, rendang and thosai. Everything else
-can be logged from a list of 76 everyday Malaysian foods and drinks, your own foods, or a quick
-calorie entry.
+The camera recognises dishes in one of two ways. The trained model from the proposal knows ten
+classes: nasi lemak, roti canai, chicken rice, char kuey teow, mee goreng mamak, nasi goreng,
+laksa, satay, rendang and thosai. Until that model is exported, Claude's vision (Anthropic)
+recognises the photo against all 76 foods and drinks in the database and ticks the add-ons it can
+see on the plate. Anything can also be logged from the food list, your own foods, or a quick
+calorie entry. See [Food recognition](#food-recognition).
 
 It is built mobile-first as a web app so it can be tested on a phone now and wrapped as a native
 app later (see [Going native](#going-native)).
@@ -38,13 +40,14 @@ app later (see [Going native](#going-native)).
 | Accept a valid JPG/PNG photo | `frontend/src/lib/image.ts` (client check), `backend/app/imaging.py` (server check by file signature, size, decodability) |
 | Predicted class and confidence | `POST /api/predict` returns the top 3 classes; the result shows "% match", the 60% low-confidence threshold and alternatives |
 | Swap in MobileNetV3 / EfficientNet-B0 / ResNet50 | `backend/app/classifier.py` loads any ONNX export; see `backend/models/README.md` |
+| Working recognition before the model is trained | `backend/app/vision.py` asks Claude to pick from the food list (structured JSON), including visible add-ons |
 | Standard-serving nutrition database | `data/malaysian_foods.json`, shared by the API and the app |
 | Profile: age, sex, height, weight, activity, goal | Onboarding (`frontend/src/screens/Onboarding.tsx`), editable under Me |
 | Mifflin–St Jeor + activity multiplier target | `frontend/src/lib/energy.ts`; every step is shown on screen |
 | Calories counted only after the user confirms dish and serving | Nothing is logged until **Add to …** is pressed |
 | Meal as a share of the target and remaining allowance | "Your day after this" card before adding; Home summary after |
 | Visible disclaimer that the photo doesn't measure portions | Scan result and food screens, Home footer, onboarding acknowledgement |
-| Images and profile data not retained | The server processes photos in memory and discards them. A small meal thumbnail is kept **on the phone only** if the user leaves "Keep meal photos" on |
+| Images and profile data not retained | The server processes photos in memory and discards them. With Claude recognition the photo is sent to Anthropic's API to identify the dish, and the app says so. A small meal thumbnail is kept **on the phone only** if the user leaves "Keep meal photos" on |
 | Inference latency for the comparison | Each prediction reports `inference_ms`, shown on the result photo |
 
 ### Screens
@@ -54,8 +57,12 @@ app later (see [Going native](#going-native)).
   the food log by meal with per-entry macros, and the Pinggan Sihat tip. Tap an entry to change
   servings, move or remove it.
 - **Scan**: live camera preview with a shutter where the browser allows it (HTTPS or
-  localhost), falling back to the phone's camera app and the gallery. The result shows your photo,
-  the best match, confidence, alternatives and a search across every food, then the log panel.
+  localhost), falling back to the phone's camera app and the gallery. The shutter keeps exactly
+  what the preview shows and sends only the dish inside the guide frame for recognition. The back
+  camera runs at up to 1080p with continuous focus, a torch button appears on phones that have
+  one, and the camera is released while the app is in the background. The result shows your
+  photo, the best match, confidence, alternatives and a search across every food, then the log
+  panel with any add-ons seen in the photo already ticked.
 - **Foods**: search in English or Malay, category chips, recent foods, the dishes the camera
   knows, and every category, each row showing kcal, P/C/F grams and a macro split bar. Each food
   has a page with a macro donut, add-ons, sweetness and a nutrition-facts panel.
@@ -82,12 +89,12 @@ were checked as a set for colour-vision deficiency on the dark surface.
 api/index.py                Vercel serverless entry point for the FastAPI backend
 data/malaysian_foods.json   76 foods, categories and add-ons per standard serving (shared)
 backend/                    FastAPI service: upload validation, classification, nutrition lookup
-  app/                      config, imaging, classifier (ONNX + demo), nutrition, main
+  app/                      config, imaging, classifier (ONNX + demo), vision (Claude), nutrition, main
   models/                   Drop model.onnx + model_config.json here
   tests/                    pytest suite
 frontend/                   React + TypeScript + Vite mobile web app
   service-worker.js         Offline cache for the installed app (built into dist/sw.js)
-  src/lib/                  energy maths, diary arithmetic, foods, dates, API client, image checks (+ tests)
+  src/lib/                  energy maths, diary arithmetic, foods, dates, API client, camera crop, image checks (+ tests)
   src/state/                on-device app state, toasts, model status
   src/components/           UI building blocks (ring, macro charts, week strip, log panel, sheets…)
   src/screens/              Home, Scan, Foods, Food detail, Create food, Progress, Me, Onboarding
@@ -127,6 +134,9 @@ Open http://localhost:5173. To try it on your phone, connect it to the same Wi-F
 
 | Variable | Default | Purpose |
 |---|---|---|
+| `ANTHROPIC_API_KEY` | *(none)* | Turns on Claude recognition when no trained model is present. Create a key at https://platform.claude.com |
+| `PINGGAN_RECOGNIZER` | `auto` | `auto` (trained model, then Claude, then demo), or force `onnx`, `claude` or `demo` |
+| `PINGGAN_CLAUDE_MODEL` | `claude-opus-5-5` | Claude model used for recognition |
 | `PINGGAN_MODEL_DIR` | `backend/models` | Where `model.onnx` and `model_config.json` are read from |
 | `PINGGAN_CONFIDENCE_THRESHOLD` | `0.6` | Top-1 confidence below which the low-confidence warning shows |
 | `PINGGAN_MAX_UPLOAD_BYTES` | `10485760` | Upload size limit |
@@ -143,8 +153,13 @@ The repository deploys to Vercel as one project, configured in `vercel.json`:
   same domain, using the root `requirements.txt`.
 
 Import the GitHub repository in Vercel (leave the root directory as the repository root); every
-push to `main` then deploys to production. The deployed API runs the demo classifier. To serve a
-trained model there, add `onnxruntime` to the root `requirements.txt` and make the model files
+push to `main` then deploys to production.
+
+**Turn on recognition:** in the Vercel project, open **Settings → Environment Variables**, add
+`ANTHROPIC_API_KEY` with your key (Production and Preview), then redeploy (**Deployments → ⋯ →
+Redeploy**). Without the key the deployed API runs the demo classifier, and every scan shows a
+"Demo mode" notice. **Me → Food recognition** shows which recogniser is live. To serve the trained
+model there instead, add `onnxruntime` to the root `requirements.txt` and make the model files
 available to the function (they are git-ignored by default).
 
 ### Installing on a phone
@@ -165,13 +180,29 @@ Vercel login page and can't install the app from it.
 where it isn't. The service worker (`frontend/service-worker.js`, built into `dist/sw.js`) caches
 the app itself, never photos or API responses.
 
-## Connecting the trained model
+## Food recognition
 
-Until a model is exported, the API uses a **demo classifier**. It returns a stable but
-meaningless prediction for each photo, and the app shows a "Demo mode" notice on every result.
-After training, export the selected network to ONNX and add its config. Step-by-step instructions
-for PyTorch and Keras are in [`backend/models/README.md`](backend/models/README.md). No app
-changes are needed. Only the ten foods marked `"scan": true` are model classes.
+The API picks a recogniser when it starts (`PINGGAN_RECOGNIZER=auto`):
+
+1. **Trained model.** If `backend/models/model.onnx` exists, it is used. Export the selected
+   network to ONNX and add its config; step-by-step instructions for PyTorch and Keras are in
+   [`backend/models/README.md`](backend/models/README.md). No app changes are needed. Only the ten
+   foods marked `"scan": true` are model classes.
+2. **Claude vision.** Otherwise, if `ANTHROPIC_API_KEY` is set, each photo is sent to Claude
+   with the food list from `data/malaysian_foods.json`. Claude answers in a fixed JSON schema: up
+   to three foods from the list with a confidence each, and the add-ons it can see. The server
+   drops anything not in the database and the app shows the result the same way as the model's.
+   Claude can name all 76 foods and drinks, and it reports when a photo has no food in it instead
+   of guessing. The food list is prompt-cached, photos are downsized to 1092 px, and a declined
+   request falls back to another Claude model automatically. Its confidence is Claude's own
+   estimate, not a softmax probability.
+3. **Demo classifier.** With neither, the prediction is stable but meaningless, and the app shows
+   a "Demo mode" notice on every result.
+
+To run Claude recognition locally, `export ANTHROPIC_API_KEY=...` before starting `uvicorn`.
+Each scan is one Claude API call; with the default model that is roughly a cent (US) per scan
+(a ~1,000-token photo plus a short answer). Set `PINGGAN_CLAUDE_MODEL` to use a different
+Claude model.
 
 ## Tests
 
@@ -188,6 +219,10 @@ These cover the functional tests listed in the proposal:
 - arithmetic consistency: entry, meal and day totals always add up, including add-ons and
   sweetness, and changing servings doesn't drift
 - loading an ONNX model in both NCHW and NHWC layouts
+- Claude recognition against a fake API: the request (downsized photo, cached food list, JSON
+  schema), ranking and add-on filtering, no-food photos, refusals, truncated answers and API
+  errors, plus which recogniser is chosen
+- the camera crop: what an `object-fit: cover` preview shows and where the guide frame falls
 - the Malaysian features: add-ons, kurang manis / kosong, the five meals and their times, quick
   add, custom foods, the halal filter, search by Malay names, streaks and migration of older diary
   data
@@ -218,9 +253,12 @@ Build with `VITE_API_BASE` pointing at the deployed API, and add the app's origi
 
 ## Scope and limitations
 
-The camera handles single-dish photos of the ten supported classes only. There is no portion or
-weight estimation; calories are always for a referenced standard serving plus the add-ons the user
-picks. A closed-set classifier always chooses one of the ten dishes, so unfamiliar foods can be
-misidentified. The low-confidence warning helps but doesn't guarantee those are caught. The pork
+The camera handles one dish per photo, of the ten trained classes or, with Claude recognition,
+the 76 foods in the database. There is no portion or weight estimation; calories are always for a
+referenced standard serving plus the add-ons the user picks. A closed-set classifier always
+chooses one of its dishes, so unfamiliar foods can be misidentified; Claude is asked to give low
+confidence to foods that aren't on the list, but can still be wrong. The low-confidence warning
+helps but doesn't guarantee those are caught. Claude recognition needs a connection and sends the
+photo to Anthropic's API. The pork
 flag reflects how a dish is usually prepared, not a halal certification. Targets are estimates for
 adults aged 18–65 and are not medical or dietary advice.

@@ -142,6 +142,11 @@
   visibility: hidden;
 }
 
+.camera__round[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
 .camera__title {
   font-size: 14px;
   font-weight: 700;

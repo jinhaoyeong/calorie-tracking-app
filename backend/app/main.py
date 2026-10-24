@@ -13,12 +13,21 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 from starlette.concurrency import run_in_threadpool
 
-from .classifier import Classifier, Prediction, load_classifier
+from .classifier import (
+    MODEL_FILE,
+    Classifier,
+    DemoClassifier,
+    Prediction,
+    RecognitionError,
+    load_classifier,
+)
 from .config import Settings, load_settings
 from .imaging import ImageRejected, decode_upload
 from .nutrition import NutritionDatabase
+from .vision import ClaudeClassifier
 
 logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 TOP_K = 3
 DISCLAIMER = (
@@ -34,7 +43,7 @@ def create_app(
 ) -> FastAPI:
     settings = settings or load_settings()
     nutrition = nutrition or NutritionDatabase.from_file(settings.foods_path)
-    classifier = classifier or load_classifier(settings.model_dir, nutrition.scan_ids)
+    classifier = classifier or select_classifier(settings, nutrition)
 
     app = FastAPI(title="Pinggan API", version="0.1.0")
     if settings.cors_origins:
@@ -46,7 +55,8 @@ def create_app(
         )
 
     @app.exception_handler(ImageRejected)
-    async def image_rejected(_request, exc: ImageRejected):
+    @app.exception_handler(RecognitionError)
+    async def rejected(_request, exc: ImageRejected | RecognitionError):
         return JSONResponse(
             status_code=exc.status, content={"detail": {"code": exc.code, "message": exc.message}}
         )
@@ -84,6 +94,7 @@ def create_app(
                     "food_id": p.food_id,
                     "name": nutrition.name_for(p.food_id),
                     "confidence": round(p.confidence, 4),
+                    "addons": list(p.addons),
                 }
                 for p in ranked[:TOP_K]
             ],
@@ -102,6 +113,18 @@ def create_app(
 
     _mount_frontend(app, settings.frontend_dist)
     return app
+
+
+def select_classifier(settings: Settings, nutrition: NutritionDatabase) -> Classifier:
+    """The exported ONNX model when there is one, else Claude when a key is set, else the demo."""
+    choice = settings.recognizer
+    if choice == "demo":
+        return DemoClassifier(nutrition.scan_ids)
+    has_model = (settings.model_dir / MODEL_FILE).exists()
+    if choice == "claude" or (choice == "auto" and settings.has_anthropic_key and not has_model):
+        log.info("Recognising dishes with Claude (%s).", settings.claude_model)
+        return ClaudeClassifier(nutrition, model=settings.claude_model)
+    return load_classifier(settings.model_dir, nutrition.scan_ids)
 
 
 def _timed_predict(classifier: Classifier, picture: Image.Image) -> tuple[list[Prediction], float]:

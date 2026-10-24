@@ -1,13 +1,15 @@
-import { CameraSlash, Images, MagnifyingGlass, Warning, X } from '@phosphor-icons/react';
+import { CameraSlash, Images, Lightning, LightningSlash, MagnifyingGlass, Warning, X } from '@phosphor-icons/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FoodThumb } from '../components/FoodThumb';
 import { BottomSheet } from '../components/BottomSheet';
 import { ApiError, predictDish, type PredictResult } from '../lib/api';
+import { CAMERA_FAILURE_MESSAGE, cameraFailure, frameArea, type Rect, visibleRegion } from '../lib/camera';
 import { isDateKey, todayKey } from '../lib/date';
 import { isMealType, suggestedMeal } from '../lib/diary';
-import { FOODS, SCAN_FOODS } from '../lib/foods';
+import { FOODS, recognisableFoods } from '../lib/foods';
 import { prepareUpload, validateImageFile } from '../lib/image';
+import { useHealth } from '../state/useHealth';
 import { ScanResult } from './ScanResult';
 import './Scan.css';
 
@@ -17,62 +19,118 @@ type Phase =
   | { kind: 'result'; photo: Blob; photoUrl: string; result: PredictResult }
   | { kind: 'error'; photoUrl?: string; message: string };
 
-type CameraState = { status: 'starting' } | { status: 'live' } | { status: 'unavailable'; reason: string };
+type CameraState =
+  | { status: 'starting' }
+  | { status: 'live'; hasTorch: boolean }
+  | { status: 'unavailable'; reason: string };
+
+/** A shot of exactly what the preview showed, and where the guide frame sat in it. */
+interface Capture {
+  photo: Blob;
+  area?: Rect;
+}
+
+// Not yet in TypeScript's DOM types, but supported by Chrome on Android.
+type CameraCapabilities = MediaTrackCapabilities & { torch?: boolean; focusMode?: string[] };
+type CameraConstraints = MediaTrackConstraintSet & { torch?: boolean; focusMode?: string };
 
 const ACCEPT = 'image/jpeg,image/png';
+// The back camera at up to 1080p, so the crop to the guide frame stays sharp.
+const VIDEO: MediaTrackConstraints = { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } };
+
+function usePageVisible(): boolean {
+  const [visible, setVisible] = useState(() => document.visibilityState === 'visible');
+  useEffect(() => {
+    const update = () => setVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', update);
+    return () => document.removeEventListener('visibilitychange', update);
+  }, []);
+  return visible;
+}
 
 /** Live preview via getUserMedia where the browser allows it (HTTPS or localhost). */
 function useCamera(active: boolean) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<MediaStreamTrack>();
   const [state, setState] = useState<CameraState>({ status: 'starting' });
+  const [torchOn, setTorchOn] = useState(false);
+  // The camera is released while the app is in the background and reopened on return.
+  const running = usePageVisible() && active;
 
   useEffect(() => {
-    if (!active) return;
-    let stream: MediaStream | undefined;
-    let cancelled = false;
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setState({ status: 'unavailable', reason: 'Live preview needs a secure (HTTPS) connection.' });
+    if (!running) return;
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      setState({ status: 'unavailable', reason: CAMERA_FAILURE_MESSAGE.insecure });
       return;
     }
+    let stream: MediaStream | undefined;
+    let cancelled = false;
     setState({ status: 'starting' });
+    setTorchOn(false);
     navigator.mediaDevices
-      .getUserMedia({ video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 } }, audio: false })
+      .getUserMedia({ video: VIDEO, audio: false })
       .then((media) => {
         if (cancelled) {
           media.getTracks().forEach((t) => t.stop());
           return;
         }
         stream = media;
-        if (videoRef.current) {
-          videoRef.current.srcObject = media;
-          void videoRef.current.play().catch(() => undefined);
+        const [track] = media.getVideoTracks();
+        trackRef.current = track;
+        const capabilities: CameraCapabilities = track.getCapabilities?.() ?? {};
+        if (capabilities.focusMode?.includes('continuous')) {
+          const focus: CameraConstraints = { focusMode: 'continuous' };
+          void track.applyConstraints({ advanced: [focus] }).catch(() => undefined);
         }
-        setState({ status: 'live' });
-      })
-      .catch((error: DOMException) => {
-        if (cancelled) return;
-        setState({
-          status: 'unavailable',
-          reason: error.name === 'NotAllowedError' ? 'Camera access was not allowed.' : 'No camera preview is available.',
+        track.addEventListener('ended', () => {
+          if (!cancelled) setState({ status: 'unavailable', reason: 'The camera stopped.' });
         });
+        const video = videoRef.current;
+        if (!video) return;
+        // Only offer the live shutter once frames are arriving, so a capture is never blank.
+        video.addEventListener(
+          'loadeddata',
+          () => !cancelled && setState({ status: 'live', hasTorch: capabilities.torch === true }),
+          { once: true },
+        );
+        video.srcObject = media;
+        void video.play().catch(() => undefined);
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) setState({ status: 'unavailable', reason: CAMERA_FAILURE_MESSAGE[cameraFailure(error)] });
       });
     return () => {
       cancelled = true;
+      trackRef.current = undefined;
       stream?.getTracks().forEach((t) => t.stop());
     };
-  }, [active]);
+  }, [running]);
 
-  const capture = useCallback(async (): Promise<Blob | null> => {
-    const video = videoRef.current;
-    if (!video || !video.videoWidth) return null;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d')?.drawImage(video, 0, 0);
-    return new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92));
+  const setTorch = useCallback((on: boolean) => {
+    const light: CameraConstraints = { torch: on };
+    trackRef.current
+      ?.applyConstraints({ advanced: [light] })
+      .then(() => setTorchOn(on))
+      .catch(() => undefined);
   }, []);
 
-  return { videoRef, state, capture };
+  const capture = useCallback(async (): Promise<Capture | null> => {
+    const video = videoRef.current;
+    if (!video || !video.videoWidth) return null;
+    const view = video.getBoundingClientRect();
+    const region = visibleRegion({ width: video.videoWidth, height: video.videoHeight }, view);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(region.width);
+    canvas.height = Math.round(region.height);
+    canvas.getContext('2d')?.drawImage(video, region.x, region.y, region.width, region.height, 0, 0, canvas.width, canvas.height);
+    const photo = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.92));
+    if (!photo) return null;
+    const frame = frameRef.current?.getBoundingClientRect();
+    return { photo, area: frame && frameArea(view, frame) };
+  }, []);
+
+  return { videoRef, frameRef, state, capture, torchOn, setTorch };
 }
 
 export function Scan() {
@@ -87,7 +145,10 @@ export function Scan() {
 
   const [phase, setPhase] = useState<Phase>({ kind: 'camera' });
   const [showList, setShowList] = useState(false);
-  const { videoRef, state: camera, capture } = useCamera(phase.kind === 'camera');
+  const { videoRef, frameRef, state: camera, capture, torchOn, setTorch } = useCamera(phase.kind === 'camera');
+  const health = useHealth();
+  const known = recognisableFoods(health.status === 'online' ? health.health.model.labels : undefined);
+  const viaClaude = health.status === 'online' && health.health.model.mode === 'claude';
   const cameraInput = useRef<HTMLInputElement>(null);
   const galleryInput = useRef<HTMLInputElement>(null);
   const request = useRef<AbortController>();
@@ -107,13 +168,14 @@ export function Scan() {
     setPhase({ kind: 'camera' });
   };
 
-  const analyse = async (photo: Blob) => {
+  /** `area` limits what is sent to the dish inside the guide frame; the full photo is kept for display. */
+  const analyse = async (photo: Blob, area?: Rect) => {
     const url = URL.createObjectURL(photo);
     setPhase({ kind: 'analysing', photo, photoUrl: url });
     const controller = new AbortController();
     request.current = controller;
     try {
-      const result = await predictDish(await prepareUpload(photo), controller.signal);
+      const result = await predictDish(await prepareUpload(photo, area), controller.signal);
       if (!controller.signal.aborted) setPhase({ kind: 'result', photo, photoUrl: url, result });
     } catch (error) {
       if (controller.signal.aborted) return;
@@ -137,8 +199,8 @@ export function Scan() {
       cameraInput.current?.click();
       return;
     }
-    const photo = await capture();
-    if (photo) await analyse(photo);
+    const shot = await capture();
+    if (shot) await analyse(shot.photo, shot.area);
   };
 
   if (phase.kind === 'result') {
@@ -164,7 +226,7 @@ export function Scan() {
       <div className="camera__stage">
         {phase.kind === 'camera' && (
           <>
-            <video ref={videoRef} className={`camera__video${camera.status === 'live' ? ' is-live' : ''}`} playsInline muted />
+            <video ref={videoRef} className={`camera__video${camera.status === 'live' ? ' is-live' : ''}`} autoPlay playsInline muted />
             {camera.status === 'unavailable' && (
               <div className="camera__fallback">
                 <CameraSlash size={40} weight="light" />
@@ -176,7 +238,7 @@ export function Scan() {
         )}
         {phase.kind !== 'camera' && phase.photoUrl && <img className="camera__still" src={phase.photoUrl} alt="Your photo" />}
 
-        <div className="camera__frame" aria-hidden="true">
+        <div className="camera__frame" ref={frameRef} aria-hidden="true">
           <span />
           <span />
           <span />
@@ -189,7 +251,19 @@ export function Scan() {
             <X size={20} weight="bold" />
           </button>
           <span className="camera__title">Scan meal</span>
-          <span className="camera__spacer" />
+          {phase.kind === 'camera' && camera.status === 'live' && camera.hasTorch ? (
+            <button
+              type="button"
+              className="camera__round"
+              onClick={() => setTorch(!torchOn)}
+              aria-pressed={torchOn}
+              aria-label="Torch"
+            >
+              {torchOn ? <Lightning size={20} weight="fill" /> : <LightningSlash size={20} weight="bold" />}
+            </button>
+          ) : (
+            <span className="camera__spacer" />
+          )}
         </div>
 
         <div className="camera__hint" role="status">
@@ -199,6 +273,8 @@ export function Scan() {
             </>
           ) : phase.kind === 'error' ? (
             'Couldn’t analyse that photo'
+          ) : camera.status === 'starting' ? (
+            'Starting camera…'
           ) : (
             'Fit one dish inside the frame'
           )}
@@ -247,9 +323,13 @@ export function Scan() {
             </Link>
           </div>
           <button type="button" className="camera__supported" onClick={() => setShowList(true)}>
-            Recognises {SCAN_FOODS.length} Malaysian dishes · View list
+            Recognises {known.length} Malaysian foods · View list
           </button>
-          <p className="camera__privacy">Photos are analysed and then discarded by the server.</p>
+          <p className="camera__privacy">
+            {viaClaude
+              ? 'Photos are sent to Claude (Anthropic) to identify the dish. Pinggan doesn’t keep them.'
+              : 'Photos are analysed and then discarded by the server.'}
+          </p>
         </div>
       )}
 
@@ -257,10 +337,14 @@ export function Scan() {
       {fileInput(galleryInput, false)}
 
       {showList && (
-        <BottomSheet title="Dishes the camera knows" onClose={() => setShowList(false)}>
-          <p className="sheet-lede">For anything else, search all {FOODS.length} foods or use quick add.</p>
+        <BottomSheet title="Foods the camera knows" onClose={() => setShowList(false)}>
+          <p className="sheet-lede">
+            {known.length < FOODS.length
+              ? `For anything else, search all ${FOODS.length} foods or use quick add.`
+              : 'For your own foods, use search or quick add.'}
+          </p>
           <ul className="card list">
-            {SCAN_FOODS.map((food) => (
+            {known.map((food) => (
               <li key={food.id} className="list-row">
                 <FoodThumb category={food.category} size={36} />
                 <span className="list-row__text">

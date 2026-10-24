@@ -6,7 +6,7 @@ import { InstallRow } from '../components/InstallApp';
 import { Switch } from '../components/Controls';
 import { TargetBreakdown } from '../components/TargetBreakdown';
 import { bmi, bmiBand, GOALS } from '../lib/energy';
-import { FOODS, NUTRITION_SOURCE_URL, NUTRITION_VERSION, SCAN_FOODS } from '../lib/foods';
+import { FOODS, NUTRITION_SOURCE_URL, NUTRITION_VERSION, recognisableFoods } from '../lib/foods';
 import { formatKcal } from '../lib/format';
 import { useProfile } from '../state/AppState';
 import { useHealth } from '../state/useHealth';
@@ -16,6 +16,8 @@ export function Me() {
   const navigate = useNavigate();
   const { profile, target, macros, entries, preferences, setPreferences, customFoods, resetAll } = useProfile();
   const health = useHealth();
+  const model = health.status === 'online' ? health.health.model : undefined;
+  const known = recognisableFoods(model?.labels);
   const [confirming, setConfirming] = useState(false);
   const bmiValue = bmi(profile.heightCm, profile.weightKg);
   const band = bmiBand(bmiValue);
@@ -134,14 +136,10 @@ export function Me() {
             </span>
             <span className="list-row__text">
               <span className="list-row__title">
-                {health.status === 'online'
-                  ? health.health.model.mode === 'demo'
-                    ? 'Demo classifier'
-                    : health.health.model.name
-                  : 'Recognition service'}
+                {model ? (model.mode === 'demo' ? 'Demo classifier' : model.name) : 'Recognition service'}
               </span>
               <span className="list-row__sub">
-                {SCAN_FOODS.length} dishes · low-confidence warning below{' '}
+                {known.length} foods · low-confidence warning below{' '}
                 {health.status === 'online' ? `${Math.round(health.health.confidenceThreshold * 100)}%` : '60%'}
               </span>
             </span>
@@ -150,10 +148,16 @@ export function Me() {
             </span>
           </li>
         </ul>
-        {health.status === 'online' && health.health.model.mode === 'demo' && (
+        {model?.mode === 'demo' && (
           <p className="me__model-note">
-            No trained model is loaded yet. Suggestions are placeholders until the selected MobileNetV3, EfficientNet-B0 or
-            ResNet50 model is exported to the server.
+            No recognition model is connected yet, so suggestions are placeholders. Export the trained MobileNetV3,
+            EfficientNet-B0 or ResNet50 model to the server, or set an Anthropic API key there to recognise dishes with Claude.
+          </p>
+        )}
+        {model?.mode === 'claude' && (
+          <p className="me__model-note">
+            Dishes are identified by Claude, Anthropic’s AI model, from every food in the list. Its confidence is an estimate,
+            so check the dish before adding it.
           </p>
         )}
       </section>
@@ -165,7 +169,10 @@ export function Me() {
         <p>
           <ShieldCheck size={20} weight="fill" />
           <span>
-            Photos are sent only to identify the dish and are discarded straight away. Your profile and diary ({entries.length}{' '}
+            {model?.mode === 'claude'
+              ? 'Photos are sent to Anthropic’s Claude only to identify the dish, and Pinggan doesn’t keep them.'
+              : 'Photos are sent only to identify the dish and are discarded straight away.'}{' '}
+            Your profile and diary ({entries.length}{' '}
             {entries.length === 1 ? 'entry' : 'entries'}) stay on this phone.
           </span>
         </p>

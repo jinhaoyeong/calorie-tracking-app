@@ -48,6 +48,10 @@
   font-size: 12px;
 }
 
+.log__hint--top {
+  margin: -4px 0 10px;
+}
+
 .log__totals {
   display: flex;
   align-items: flex-end;

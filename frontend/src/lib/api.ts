@@ -4,12 +4,14 @@ export interface PredictionScore {
   foodId: string;
   name: string;
   confidence: number;
+  /** Add-ons seen on the plate with this dish (Claude vision only). */
+  addons: string[];
 }
 
 export interface ModelSummary {
   name: string;
   architecture: string;
-  mode: 'onnx' | 'demo';
+  mode: 'onnx' | 'claude' | 'demo';
 }
 
 export interface PredictResult {
@@ -28,7 +30,7 @@ export interface Health {
 }
 
 interface RawPredict {
-  predictions: { food_id: string; name: string; confidence: number }[];
+  predictions: { food_id: string; name: string; confidence: number; addons?: string[] }[];
   low_confidence: boolean;
   confidence_threshold: number;
   model: ModelSummary;
@@ -83,6 +85,7 @@ export async function predictDish(image: Blob, signal?: AbortSignal): Promise<Pr
       foodId: p.food_id,
       name: p.name,
       confidence: p.confidence,
+      addons: p.addons ?? [],
     })),
     lowConfidence: body.low_confidence,
     confidenceThreshold: body.confidence_threshold,

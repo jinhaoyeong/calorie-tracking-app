@@ -124,7 +124,16 @@ export function ScanResult({ photoUrl, photo, result, date, meal, onRetake }: Pr
 
         {food ? (
           <div className="result__log">
-            <LogFood food={food} date={date} initialMeal={meal} source="scan" confidence={prediction?.confidence} photo={photo} />
+            <LogFood
+              key={food.id}
+              food={food}
+              date={date}
+              initialMeal={meal}
+              source="scan"
+              confidence={prediction?.confidence}
+              photo={photo}
+              initialAddons={prediction?.addons}
+            />
           </div>
         ) : (
           <div className="notice notice--danger result__missing" role="alert">

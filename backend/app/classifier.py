@@ -2,8 +2,9 @@
 
 The trained model (MobileNetV3, EfficientNet-B0 or ResNet50, whichever the comparison
 selects) is loaded from an ONNX export so the API does not depend on the training
-framework. Until a model is exported, a clearly labelled demo classifier is used so the
-rest of the prototype can be exercised end to end.
+framework. Until a model is exported, Claude's vision recognises the dish when an
+Anthropic API key is configured (see vision.py); otherwise a clearly labelled demo
+classifier is used so the rest of the prototype can be exercised end to end.
 """
 
 from __future__ import annotations
@@ -33,13 +34,15 @@ IMAGENET_STD = [0.229, 0.224, 0.225]
 class Prediction:
     food_id: str
     confidence: float
+    # Add-on ids seen on the plate with this dish; only the vision recognizer reports them.
+    addons: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
 class ModelInfo:
     name: str
     architecture: str
-    mode: str  # "onnx" or "demo"
+    mode: str  # "onnx", "claude" or "demo"
     input_size: int
     labels: list[str]
 
@@ -51,12 +54,25 @@ class Classifier(Protocol):
     info: ModelInfo
 
     def predict(self, image: Image.Image) -> list[Prediction]:
-        """Return a prediction for every class, sorted by descending confidence."""
+        """Return predictions sorted by descending confidence (at least one).
+
+        Raises RecognitionError when the photo cannot be classified.
+        """
         ...
 
 
 class ModelConfigError(ValueError):
     pass
+
+
+class RecognitionError(Exception):
+    """A photo that could not be classified, reported to the app with a status and code."""
+
+    def __init__(self, status: int, code: str, message: str):
+        super().__init__(message)
+        self.status = status
+        self.code = code
+        self.message = message
 
 
 def softmax(values: np.ndarray) -> np.ndarray:

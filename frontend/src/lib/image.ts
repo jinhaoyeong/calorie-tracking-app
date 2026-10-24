@@ -1,3 +1,5 @@
+import { pixelsOf, type Rect } from './camera';
+
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 /** Longest side sent to the server. Classifiers use 224 px inputs, so this keeps uploads small on mobile data. */
 export const UPLOAD_MAX_SIDE = 1024;
@@ -28,19 +30,23 @@ export async function validateImageFile(file: File): Promise<FileCheck> {
 }
 
 /**
- * Re-encodes large photos to at most UPLOAD_MAX_SIDE px as JPEG. Browsers apply EXIF
- * rotation when decoding, and re-encoding drops the remaining metadata such as location.
+ * Re-encodes photos to at most UPLOAD_MAX_SIDE px as JPEG, cropped to `area` (fractions of
+ * the photo) when given. Browsers apply EXIF rotation when decoding, and re-encoding drops
+ * the remaining metadata such as location.
  */
-export async function prepareUpload(file: Blob): Promise<Blob> {
+export async function prepareUpload(file: Blob, area?: Rect): Promise<Blob> {
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
   } catch {
     return file;
   }
-  const scale = Math.min(1, UPLOAD_MAX_SIDE / Math.max(bitmap.width, bitmap.height));
-  const width = Math.round(bitmap.width * scale);
-  const height = Math.round(bitmap.height * scale);
+  const source = area
+    ? pixelsOf(bitmap, area)
+    : { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+  const scale = Math.min(1, UPLOAD_MAX_SIDE / Math.max(source.width, source.height));
+  const width = Math.round(source.width * scale);
+  const height = Math.round(source.height * scale);
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -49,7 +55,7 @@ export async function prepareUpload(file: Blob): Promise<Blob> {
     bitmap.close();
     return file;
   }
-  context.drawImage(bitmap, 0, 0, width, height);
+  context.drawImage(bitmap, source.x, source.y, source.width, source.height, 0, 0, width, height);
   bitmap.close();
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9));
   return blob ?? file;

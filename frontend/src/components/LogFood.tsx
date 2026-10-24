@@ -29,22 +29,25 @@ interface Props {
   confidence?: number;
   /** The scanned photo; when present the user can choose to keep a thumbnail. */
   photo?: Blob;
+  /** Add-ons the scan saw on the plate, ticked to start with. */
+  initialAddons?: string[];
 }
 
 const SWEETNESS_OPTIONS = (Object.keys(SWEETNESS) as Sweetness[]).map((value) => ({ value, label: SWEETNESS[value].label }));
 
-export function LogFood({ food, date, initialMeal, source, confidence, photo }: Props) {
+export function LogFood({ food, date, initialMeal, source, confidence, photo, initialAddons = [] }: Props) {
   const { entries, target, preferences, setPreferences, addEntry, removeEntry } = useProfile();
   const navigate = useNavigate();
   const toast = useToast();
   const [servings, setServings] = useState(1);
   const [meal, setMeal] = useState<MealType>(initialMeal);
-  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
+  const [selectedAddons, setSelectedAddons] = useState<string[]>(initialAddons);
   const [sweetness, setSweetness] = useState<Sweetness>('normal');
   const [saving, setSaving] = useState(false);
 
   const availableAddons = addonsFor(food);
   const chosen: Addon[] = availableAddons.filter((a) => selectedAddons.includes(a.id));
+  const spotted = availableAddons.some((a) => initialAddons.includes(a.id));
   const perServing = servingNutrients(food, chosen, sweetness);
   const portion = nutrientsFor(perServing, servings);
 
@@ -97,6 +100,7 @@ export function LogFood({ food, date, initialMeal, source, confidence, photo }: 
         {availableAddons.length > 0 && (
           <div className="log__group">
             <h3 className="log__label">Add-ons · Tambah</h3>
+            {spotted && <p className="log__hint log__hint--top">Ticked from your photo. Untick anything that isn’t there.</p>}
             <div className="chips">
               {availableAddons.map((addon) => {
                 const on = selectedAddons.includes(addon.id);
