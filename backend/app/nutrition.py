@@ -35,6 +35,10 @@ class NutritionDatabase:
         return list(self._foods)
 
     @property
+    def foods(self) -> list[dict[str, Any]]:
+        return list(self._foods.values())
+
+    @property
     def scan_ids(self) -> list[str]:
         """The classes the recognition model is trained on (the ten proposal dishes)."""
         return [food_id for food_id, food in self._foods.items() if food.get("scan")]
@@ -45,6 +49,6 @@ class NutritionDatabase:
             "basis": self.basis,
             "source_url": self.source_url,
             "categories": self.categories,
-            "foods": list(self._foods.values()),
+            "foods": self.foods,
             "addons": self.addons,
         }

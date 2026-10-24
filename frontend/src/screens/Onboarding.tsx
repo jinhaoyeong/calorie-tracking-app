@@ -13,9 +13,10 @@ import {
   validateProfile,
   type ProfileErrors,
 } from '../lib/energy';
-import { FOODS, SCAN_FOODS } from '../lib/foods';
+import { FOODS, recognisableFoods } from '../lib/foods';
 import { formatKcal } from '../lib/format';
 import { useApp } from '../state/AppState';
+import { useHealth } from '../state/useHealth';
 import './Onboarding.css';
 
 const STEPS = ['name', 'about', 'body', 'activity', 'goal', 'target'] as const;
@@ -67,6 +68,8 @@ export function Onboarding() {
   const navigate = useNavigate();
   const { saveProfile } = useApp();
   const [stepIndex, setStepIndex] = useState(-1);
+  const health = useHealth();
+  const cameraFoods = recognisableFoods(health.status === 'online' ? health.health.model.labels : undefined).length;
   const [form, setForm] = useState<ProfileForm>({ name: '', age: '', heightCm: '', weightKg: '' });
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [acknowledged, setAcknowledged] = useState(false);
@@ -117,8 +120,8 @@ export function Onboarding() {
               <span>Local foods</span>
             </li>
             <li>
-              <strong className="display">{SCAN_FOODS.length}</strong>
-              <span>Dishes by camera</span>
+              <strong className="display">{cameraFoods}</strong>
+              <span>Foods by camera</span>
             </li>
             <li>
               <strong className="display">P·C·F</strong>

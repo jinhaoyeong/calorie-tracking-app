@@ -72,6 +72,17 @@ export const NUTRITION_VERSION: string = database.version;
 /** The ten dishes the recognition model is trained on, in database order. */
 export const SCAN_FOODS: Food[] = FOODS.filter((food) => food.scan);
 
+/**
+ * The foods the connected recogniser can name, from the labels the server reports. Claude
+ * vision knows every food; a trained model knows its classes. Without labels, the ten
+ * model classes.
+ */
+export function recognisableFoods(labels?: string[]): Food[] {
+  if (!labels) return SCAN_FOODS;
+  const ids = new Set(labels);
+  return FOODS.filter((food) => ids.has(food.id));
+}
+
 const foodsById = new Map(FOODS.map((food) => [food.id, food]));
 const addonsById = new Map(ADDONS.map((addon) => [addon.id, addon]));
 

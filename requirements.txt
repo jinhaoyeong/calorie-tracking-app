@@ -1,6 +1,8 @@
 # Python dependencies for the Vercel serverless API (api/index.py).
-# The deployed API runs the demo classifier; local development uses backend/requirements.txt.
+# The deployed API recognises dishes with Claude when ANTHROPIC_API_KEY is set, and runs the demo
+# classifier otherwise; local development uses backend/requirements.txt.
 fastapi==0.115.6
 python-multipart==0.0.19
 pillow==11.0.0
 numpy==2.1.3
+anthropic==2.3.0
